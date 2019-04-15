@@ -403,7 +403,7 @@ $$K=\begin{bmatrix}
 
 竞争者$F_{i}$争夺资源$C_{j}$的概率： 
 
-$$h\left（ F_{i},C_{j} \right） = \frac{compete（F_{i},\ C_{j}）}{\sum_{j \in j}^{}{compete（F_{i},\ C_{j}）}}$$
+$$h\left (F_{i},C_{j} \right) = \frac{compete(F_{i},\ C_{j})}{\sum_{j \in j}^{}{compete(F_{i},\ C_{j})}}$$
 
 由上式可以看出，竞争者对于资源的竞争力越大，竞争者争夺该资源的概率就越大，这样保证了竞争者争夺到有利的资源的几率较大，而争夺到不利资源的几率较小。
 
