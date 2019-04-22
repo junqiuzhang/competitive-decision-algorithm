@@ -1,5 +1,6 @@
 *.doc
 *.docx
+*.pdf
 *.js
 # some local files
 */.settings/
