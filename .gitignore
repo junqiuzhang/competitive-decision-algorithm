@@ -1,7 +1,7 @@
 *.doc
 *.docx
 *.pdf
-*.js
+# *.js
 # some local files
 */.settings/
 */.DS_Store
