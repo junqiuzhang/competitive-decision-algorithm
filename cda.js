@@ -41,8 +41,9 @@ const bigger = (x, y) => {
     return null;
   }
   for (let i = 0; i < x.length; i++) {
-    if (x[i] <= y[i]) {
+    if (x[i] < y[i]) {
       return false;
+      break;
     }
   }
   return true;
@@ -53,8 +54,9 @@ let smaller = (x, y) => {
     return null;
   }
   for (let i = 0; i < x.length; i++) {
-    if (x[i] >= y[i]) {
+    if (x[i] > y[i]) {
       return false;
+      break;
     }
   }
   return true;
@@ -85,8 +87,8 @@ let column = (matrix, index) => {
 const F = 4;
 const C = 5;
 const U = 2;
-const H = rand(1, F, [50, 100]);
-const D = rand(F, C, [30, 50]);
+const H = rand(1, F, [5, 8]);
+const D = rand(F, C, [30, 60]);
 console.log('H, D', H, D)
 /** cda算法
  * 
@@ -96,12 +98,11 @@ let mustX = rand(F, C, [0, 1]);
 let mustY = rand(1, F, [0, 1]);
 let x = rand(F, C, [0, 1]);
 let y = rand(1, F, [0, 1]);
-console.log('x, y', x, y);
+// console.log('x, y', x, y);
 
 // 第一步：根据性质降阶
 // 性质2
 let minIndex = H.indexOf(Math.min(...H));
-// F必定服务的设施
 for (let j = 0; j < C; j++) {
   let isFMustServerC = true;
   for (let i = 0; i < F; i++) {
@@ -115,17 +116,19 @@ for (let j = 0; j < C; j++) {
     mustY[minIndex] = 1;
   }
 }
-console.log('mustX, mustY', mustX, mustY);
+// console.log('mustX, mustY', mustX, mustY);
 
 // 性质3
 for (let i = 0; i < F; i++) {
-  for (let j = i; j < F; j++) {
-    if (H[i] < H[j] && smaller(D[i], D[j])) {
+  for (let j = i + 1; j < F; j++) {
+    if (H[i] <= H[j] && smaller(D[i], D[j])) {
       mustY[j] = -1;
+    } else if (H[i] >= H[j] && bigger(D[i], D[j])) {
+      mustY[i] = -1;
     }
   }
 }
-console.log('mustX, mustY', mustX, mustY);
+// console.log('mustX, mustY', mustX, mustY);
 
 // 第二步：计算竞争力函数矩阵
 
