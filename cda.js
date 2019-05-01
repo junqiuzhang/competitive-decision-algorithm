@@ -5,9 +5,9 @@ const rand = (x, y, scope) => {
     return null;
   }
   // 随机数组
-  let randArray = (x, scope) => {
+  const randArray = (x, scope) => {
     // 随机数
-    let randNumber = (scope) => {
+    const randNumber = (scope) => {
       return Math.floor(Math.random() * (scope[1] - scope[0]) + scope[0]);
     }
     // 1 x 1数组
@@ -48,7 +48,7 @@ const bigger = (x, y) => {
   }
   return true;
 }
-let smaller = (x, y) => {
+const smaller = (x, y) => {
   if (x.length !== y.length) {
     console.log('Error: 数组长度不相同');
     return null;
@@ -61,7 +61,7 @@ let smaller = (x, y) => {
   }
   return true;
 }
-let column = (matrix, index) => {
+const column = (matrix, index) => {
   if (matrix.length === 0 || matrix[0].length === 0) {
     console.log('Error: 矩阵长度为0');
     return null;
@@ -75,6 +75,9 @@ let column = (matrix, index) => {
     column.push(matrix[index]);
   }
   return column;
+}
+const compete = (i, j, x, y, H, D) => {
+  return 
 }
 /** 参数 
  * F设施数
