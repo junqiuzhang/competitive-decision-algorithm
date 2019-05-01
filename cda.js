@@ -1,47 +1,65 @@
 // 随机矩阵
-function rand(x, y, scope) {
-  if (!scope || !scope.length || scope[0] >= scope[1]) {
+const rand = (x, y, scope) => {
+  if (!scope || !scope.length || scope[0] > scope[1]) {
     console.log('Error: 未输入取值范围或取值范围错误');
     return null;
   }
-
-  // 随机数
-  function randNumber(scope, randItem) {
-    return Math.floor(Math.random() * (scope[1] - scope[0]) + scope[0]);
-  }
-
   // 随机数组
-  function randArray(x, scope, randItem) {
-    if (typeof randItem !== 'function') {
-      console.log('Error: 参数应为函数');
-      return null;
+  let randArray = (x, scope) => {
+    // 随机数
+    let randNumber = (scope) => {
+      return Math.floor(Math.random() * (scope[1] - scope[0]) + scope[0]);
     }
+    // 1 x 1数组
+    if (x === 1) {
+      return randNumber(scope);
+    }
+    // 1 x n数组
     let randArray = [];
     for (let i = 0; i < x; i++) {
-      randArray.push(randItem(scope));
+      randArray.push(randNumber(scope));
     }
     return randArray;
   }
-
-  if (x === 1 || y === 1) {
-    return randArray(y, scope, randNumber);
+  // 1 x n矩阵
+  if (x === 1) {
+    return randArray(y, scope);
   }
-
-  return randArray(x, scope, () => randArray(y, scope, randNumber));
+  if (y === 1) {
+    return randArray(x, scope);
+  }
+  // n x n矩阵
+  let randMatrix = [];
+  for (let i = 0; i < x; i++) {
+    randMatrix.push(randArray(y, scope));
+  }
+  return randMatrix;
 }
-function bigger(x, y) {
+const bigger = (x, y) => {
   if (x.length !== y.length) {
     console.log('Error: 数组长度不相同');
     return null;
   }
   for (let i = 0; i < x.length; i++) {
-    if (x[i] < y[i]) {
+    if (x[i] <= y[i]) {
       return false;
     }
   }
   return true;
 }
-function column(matrix, index) {
+let smaller = (x, y) => {
+  if (x.length !== y.length) {
+    console.log('Error: 数组长度不相同');
+    return null;
+  }
+  for (let i = 0; i < x.length; i++) {
+    if (x[i] >= y[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+let column = (matrix, index) => {
   if (matrix.length === 0 || matrix[0].length === 0) {
     console.log('Error: 矩阵长度为0');
     return null;
@@ -69,29 +87,45 @@ const C = 5;
 const U = 2;
 const H = rand(1, F, [50, 100]);
 const D = rand(F, C, [30, 50]);
-console.log(H, D)
+console.log('H, D', H, D)
 /** cda算法
  * 
 */
+// 初始化
+let mustX = rand(F, C, [0, 1]);
+let mustY = rand(1, F, [0, 1]);
+let x = rand(F, C, [0, 1]);
+let y = rand(1, F, [0, 1]);
+console.log('x, y', x, y);
 
 // 第一步：根据性质降阶
 // 性质2
-let minIndex = H[0].indexOf(Math.min(...H[0]));
-console.log(...H[0])
-console.log(Math.min(...H[0]))
-let FMustServer = [];
+let minIndex = H.indexOf(Math.min(...H));
+// F必定服务的设施
 for (let j = 0; j < C; j++) {
   let isFMustServerC = true;
   for (let i = 0; i < F; i++) {
-    console.log(minIndex)
-    if (D[i][j] < H[0][minIndex] + D[minIndex][j]) {
+    if (D[i][j] < H[minIndex] + D[minIndex][j]) {
       isFMustServerC = false;
+      break;
     }
   }
-  FMustServer.push(isFMustServerC);
+  if (isFMustServerC) {
+    mustX[minIndex][j] = 1;
+    mustY[minIndex] = 1;
+  }
 }
-console.log(FMustServer);
+console.log('mustX, mustY', mustX, mustY);
+
 // 性质3
+for (let i = 0; i < F; i++) {
+  for (let j = i; j < F; j++) {
+    if (H[i] < H[j] && smaller(D[i], D[j])) {
+      mustY[j] = -1;
+    }
+  }
+}
+console.log('mustX, mustY', mustX, mustY);
 
 // 第二步：计算竞争力函数矩阵
 
@@ -102,4 +136,5 @@ console.log(FMustServer);
 // 第五步：资源交换
 
 // 第六步：输出结果
-console.log(x, y);
+
+// console.log(x, y);
