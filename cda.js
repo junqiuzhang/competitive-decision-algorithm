@@ -1,18 +1,33 @@
 // 随机矩阵
-function rand(x, y, arr) {
-  if (!arr || !arr.length || arr[0] >= arr[1]) {
-    console.log('Error: 未输入取值范围或取值范围错误')；
+function rand(x, y, scope) {
+  if (!scope || !scope.length || scope[0] >= scope[1]) {
+    console.log('Error: 未输入取值范围或取值范围错误');
     return null;
   }
-  let matrix = [];
-  for (let i = 0; i < x; i++) {
-    let matrixRow = [];
-    for (let j = 0; j < y; j++) {
-      matrixRow.push(Math.floor(Math.random() * (arr[1] - arr[0]) + arr[1]));
-    }
-    matrix.push(matrixRow);
+
+  // 随机数
+  function randNumber(scope, randItem) {
+    return Math.floor(Math.random() * (scope[1] - scope[0]) + scope[0]);
   }
-  return matrix;
+
+  // 随机数组
+  function randArray(x, scope, randItem) {
+    if (typeof randItem !== 'function') {
+      console.log('Error: 参数应为函数');
+      return null;
+    }
+    let randArray = [];
+    for (let i = 0; i < x; i++) {
+      randArray.push(randItem(scope));
+    }
+    return randArray;
+  }
+
+  if (x === 1 || y === 1) {
+    return randArray(y, scope, randNumber);
+  }
+
+  return randArray(x, scope, () => randArray(y, scope, randNumber));
 }
 function bigger(x, y) {
   if (x.length !== y.length) {
@@ -54,19 +69,22 @@ const C = 5;
 const U = 2;
 const H = rand(1, F, [50, 100]);
 const D = rand(F, C, [30, 50]);
-
+console.log(H, D)
 /** cda算法
  * 
 */
 
 // 第一步：根据性质降阶
 // 性质2
-let minIndex = H.findIndex(Math.min(...H));
+let minIndex = H[0].indexOf(Math.min(...H[0]));
+console.log(...H[0])
+console.log(Math.min(...H[0]))
 let FMustServer = [];
 for (let j = 0; j < C; j++) {
   let isFMustServerC = true;
   for (let i = 0; i < F; i++) {
-    if (D[i][j] < H[minIndex] + D[minIndex][j]) {
+    console.log(minIndex)
+    if (D[i][j] < H[0][minIndex] + D[minIndex][j]) {
       isFMustServerC = false;
     }
   }
