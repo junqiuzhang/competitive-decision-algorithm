@@ -96,8 +96,8 @@ const U = 2;
 const H = rand(1, F, [5, 8]);
 const D = rand(F, C, [30, 60]);
 console.log('H, D', H, D)
-/** cda算法
- * 
+/**
+ * cda算法
 */
 // 初始化
 let mustX = rand(F, C, [0, 1]);
@@ -106,7 +106,9 @@ let x = rand(F, C, [0, 1]);
 let y = rand(1, F, [0, 1]);
 // console.log('x, y', x, y);
 
-// 第一步：根据性质降阶
+/** 
+ * 第一步：根据性质降阶
+*/
 // 性质2
 let minIndex = H.indexOf(Math.min(...H));
 for (let j = 0; j < C; j++) {
@@ -136,17 +138,27 @@ for (let i = 0; i < F; i++) {
 }
 // console.log('mustX, mustY', mustX, mustY);
 
-// 第二步：计算竞争力函数矩阵
+/** 
+ * 第二步：计算竞争力函数矩阵
+*/
 x = mustX;
 y = mustY;
 let K = rand(F, C, [0, 1]);
 
-// 第三步：分配顾客
+/** 
+ * 第三步：分配顾客
+*/
 
-// 第四步：争夺顾客
+/** 
+ * 第四步：争夺顾客
+*/
 
-// 第五步：资源交换
+/** 
+ * 第五步：资源交换
+*/
 
-// 第六步：输出结果
+/** 
+ * 第六步：输出结果
+*/
 
 // console.log(x, y);
