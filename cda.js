@@ -77,6 +77,14 @@ const column = (matrix, index) => {
   }
   return column;
 }
+// 数组求和
+const sumArr = (arr) => {
+  let sum = 0;
+  for(let i = 0; i <= arr.length; i++){
+    sum += arr[i];
+  }
+  return sum;
+}
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (y[i] === 1) {
@@ -95,8 +103,8 @@ const compete = (i, j, x, y, H, D) => {
 const F = 4;
 const C = 5;
 const U = 2;
-const H = rand(1, F, [50, 80]);
-const D = rand(F, C, [30, 60]);
+const H = rand(1, F, [5, 20]);
+const D = rand(F, C, [5, 20]);
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -146,37 +154,69 @@ for (let i = 0; i < F; i++) {
 x = mustX;
 y = mustY;
 let K = rand(F, C, [0, 1]);
-for (let i = 0; i < F; i++) {
-  for (let j = 0; j < C; j++) {
-    K[i][j] = compete(i, j, x, y, H, D);
+let newCompete = () => {
+  for (let i = 0; i < F; i++) {
+    for (let j = 0; j < C; j++) {
+      K[i][j] = compete(i, j, x, y, H, D);
+    }
+  }
+  for (let i = 0; i < F; i++) {
+    for (let j = 0; j < C; j++) {
+      if (mustX[i][j]) {
+        for (let newI = 0; newI < F; newI++) {
+          K[newI][j] = 0;
+        }
+        for (let newJ = 0; newJ < C; newJ++) {
+          K[i][newJ] = 0;
+        }
+      }
+    }
   }
 }
-for (let i = 0; i < F; i++) {
-  for (let j = 0; j < C; j++) {
-    if (mustX[i][j]) {
-      for (let newI = 0; newI < F; newI++) {
-        K[newI][j] = 0;
-      }
-      for (let newJ = 0; newJ < C; newJ++) {
-        K[i][newJ] = 0;
-      }
-    }   
-  }
-}
-// console.log('K', K);
+newCompete();
+console.log('K', K);
 /** 
  * 第三步：分配顾客
 */
 for (let j = 0; j < C; j++) {
-  let Kj = column(K, j);
-  let Ki = Kj.indexOf(Math.max(...Kj));
+  let KCol = column(K, j);
+
+  for (let maxIndex = 0; maxIndex < F; maxIndex++) {
+    for (let i = maxIndex; i < F; i++) {
+      // if () {
+
+      // }
+    }
+    maxIndex++;
+  }
+
   x[Ki][j] = 1;
+  y[Ki] = 1;
 }
-console.log('x', x);
+// console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
+const MaxLoopTimes = 1000;
+let loopTimes = 0;
 
+while (loopTimes > MaxLoopTimes) {
+  for (let j = 0; j < C; j++) {
+    let xCol = column(x, j);
+    let serverF = xCol.indexOf(1);
+    // 更新竞争力函数
+    x[serverF][j] = 0;
+    newCompete();
+    for (let i = 0; i < F; i++) {
+      K[i][j] = 1;
+    }
+    // 争夺顾客
+    for (let i = 0; i < F; i++) {
+      
+    }
+  }
+  loopTimes++;
+}
 /** 
  * 第五步：资源交换
 */
