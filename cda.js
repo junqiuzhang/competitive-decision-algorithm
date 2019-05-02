@@ -79,8 +79,12 @@ const column = (matrix, index) => {
 }
 // 数组求和
 const sumArr = (arr) => {
+  if (!arr || !arr.length) {
+    console.log('Error:参数应为数组');
+    return null;
+  }
   let sum = 0;
-  for(let i = 0; i <= arr.length; i++){
+  for(let i = 0; i < arr.length; i++){
     sum += arr[i];
   }
   return sum;
@@ -174,24 +178,23 @@ let newCompete = () => {
   }
 }
 newCompete();
-console.log('K', K);
+// console.log('K', K);
 /** 
  * 第三步：分配顾客
 */
 for (let j = 0; j < C; j++) {
+  const ConstKCol = column(K, j);
   let KCol = column(K, j);
-
-  for (let maxIndex = 0; maxIndex < F; maxIndex++) {
-    for (let i = maxIndex; i < F; i++) {
-      // if () {
-
-      // }
+  KCol.sort();
+  for (let index = 0; index < F; index++) {
+    let maxNum = KCol[KCol.length - 1 - index];
+    let maxIndex = ConstKCol.indexOf(maxNum);
+    if (sumArr(x[maxIndex]) <= U) {
+      x[maxIndex][j] = 1;
+      y[maxIndex] = 1;
+      break;
     }
-    maxIndex++;
   }
-
-  x[Ki][j] = 1;
-  y[Ki] = 1;
 }
 // console.log('x', x);
 /** 
@@ -206,13 +209,19 @@ while (loopTimes > MaxLoopTimes) {
     let serverF = xCol.indexOf(1);
     // 更新竞争力函数
     x[serverF][j] = 0;
-    newCompete();
-    for (let i = 0; i < F; i++) {
-      K[i][j] = 1;
+    if (sumArr(x[serverF]) === 0) {
+      y[serverF] = 0;
     }
+    newCompete();
     // 争夺顾客
+    let KCol = column(K, j);
+    let maxIndex = KCol.indexOf(Math.max(...KCol));
+    if (maxIndex === serverF) {
+      x[serverF][j] = 1;
+      y[serverF] = 1;
+    }
     for (let i = 0; i < F; i++) {
-      
+
     }
   }
   loopTimes++;
