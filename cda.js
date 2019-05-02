@@ -61,6 +61,7 @@ const smaller = (x, y) => {
   }
   return true;
 }
+// 获取矩阵的一列
 const column = (matrix, index) => {
   if (matrix.length === 0 || matrix[0].length === 0) {
     console.log('Error: 矩阵长度为0');
@@ -72,10 +73,11 @@ const column = (matrix, index) => {
   }
   let column = [];
   for (let i = 0; i < matrix.length; i++) {
-    column.push(matrix[index]);
+    column.push(matrix[i][index]);
   }
   return column;
 }
+// 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (y[i] === 1) {
     return 1/D[i][j];
@@ -93,7 +95,7 @@ const compete = (i, j, x, y, H, D) => {
 const F = 4;
 const C = 5;
 const U = 2;
-const H = rand(1, F, [5, 8]);
+const H = rand(1, F, [50, 80]);
 const D = rand(F, C, [30, 60]);
 console.log('H, D', H, D)
 /**
@@ -144,11 +146,33 @@ for (let i = 0; i < F; i++) {
 x = mustX;
 y = mustY;
 let K = rand(F, C, [0, 1]);
-
+for (let i = 0; i < F; i++) {
+  for (let j = 0; j < C; j++) {
+    K[i][j] = compete(i, j, x, y, H, D);
+  }
+}
+for (let i = 0; i < F; i++) {
+  for (let j = 0; j < C; j++) {
+    if (mustX[i][j]) {
+      for (let newI = 0; newI < F; newI++) {
+        K[newI][j] = 0;
+      }
+      for (let newJ = 0; newJ < C; newJ++) {
+        K[i][newJ] = 0;
+      }
+    }   
+  }
+}
+// console.log('K', K);
 /** 
  * 第三步：分配顾客
 */
-
+for (let j = 0; j < C; j++) {
+  let Kj = column(K, j);
+  let Ki = Kj.indexOf(Math.max(...Kj));
+  x[Ki][j] = 1;
+}
+console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
