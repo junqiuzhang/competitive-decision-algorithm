@@ -35,6 +35,26 @@ const rand = (x, y, scope) => {
   }
   return randMatrix;
 }
+// 复制矩阵
+const copyMatrix = (x) => {
+  const copyArray = (x) => {
+    let yArray = [];
+    for (let j = 0; j < x.length; j++) {
+      yArray.push(x[j]);
+    }
+    return yArray;
+  }
+  // 1 x n矩阵
+  if (typeof x[0] === 'number') {
+    return copyArray(x);
+  }
+  // n x n矩阵
+  let y = [];
+  for (let i = 0; i < x.length; i++) {
+    y.push(copyArray(x[i]));
+  }
+  return y;
+}
 const bigger = (x, y) => {
   if (x.length !== y.length) {
     console.log('Error: 数组长度不相同');
@@ -84,7 +104,7 @@ const sumArr = (arr) => {
     return null;
   }
   let sum = 0;
-  for(let i = 0; i < arr.length; i++){
+  for (let i = 0; i < arr.length; i++) {
     sum += arr[i];
   }
   return sum;
@@ -92,19 +112,19 @@ const sumArr = (arr) => {
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (y[i] === 1) {
-    return 1/D[i][j];
+    return 1 / D[i][j];
   }
-  return 1/(H[i] + D[i][j]);
+  return 1 / (H[i] + D[i][j]);
 }
 // 目标函数
 const costFunction = (x, H, D, U) => {
   let sum, min = 0;
-  for(let i = 0; i < x.length; i++){
+  for (let i = 0; i < x.length; i++) {
     xi = x[i];
     sum = 0;
-    for(let j = 0; j < xi.length; j++){
+    for (let j = 0; j < xi.length; j++) {
       sum += xi[j];
-      if(xi[j]){
+      if (xi[j]) {
         min += D[i][j];
       }
     }
@@ -123,8 +143,16 @@ const costFunction = (x, H, D, U) => {
 const F = 4;
 const C = 5;
 const U = 2;
-const H = rand(1, F, [5, 20]);
-const D = rand(F, C, [5, 20]);
+// const H = rand(1, F, [5, 20]);
+// const D = rand(F, C, [5, 20]);
+
+const H = [10, 29, 22, 16];
+const D = [
+  [3, 7, 12, 13, 14],
+  [17, 13, 14, 16, 17],
+  [14, 9, 9, 10, 6],
+  [15, 10, 8, 6, 3]
+];
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -144,7 +172,7 @@ let minIndex = H.indexOf(Math.min(...H));
 for (let j = 0; j < C; j++) {
   let isFMustServerC = true;
   for (let i = 0; i < F; i++) {
-    if (D[i][j] < H[minIndex] + D[minIndex][j]) {
+    if (i !== minIndex && D[i][j] < H[minIndex] + D[minIndex][j]) {
       isFMustServerC = false;
       break;
     }
@@ -171,8 +199,8 @@ for (let i = 0; i < F; i++) {
 /** 
  * 第二步：计算竞争力函数矩阵
 */
-x = mustX;
-y = mustY;
+x = copyMatrix(mustX);
+y = copyMatrix(mustY);
 let K = rand(F, C, [0, 1]);
 let newCompete = () => {
   for (let i = 0; i < F; i++) {
@@ -186,9 +214,11 @@ let newCompete = () => {
         for (let newI = 0; newI < F; newI++) {
           K[newI][j] = 0;
         }
-        for (let newJ = 0; newJ < C; newJ++) {
-          K[i][newJ] = 0;
-        }
+      }
+    }
+    if (sumArr(mustX[i]) === U) {
+      for (let newJ = 0; newJ < C; newJ++) {
+        K[i][newJ] = 0;
       }
     }
   }
@@ -205,23 +235,28 @@ for (let j = 0; j < C; j++) {
   for (let index = 0; index < F; index++) {
     let maxNum = KCol[KCol.length - 1 - index];
     let maxIndex = ConstKCol.indexOf(maxNum);
-    if (sumArr(x[maxIndex]) <= U) {
+    if (sumArr(x[maxIndex]) < U) {
       x[maxIndex][j] = 1;
       y[maxIndex] = 1;
       break;
     }
   }
 }
-// console.log('x', x);
+console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
 const MaxLoopTimes = 1000;
 let loopTimes = 0;
 
-while (loopTimes > MaxLoopTimes) {
+while (loopTimes <= MaxLoopTimes) {
   let j = 0;
   for (j = 0; j < C; j++) {
+    let mustXCol = column(mustX, j);
+    console.log('mustXCol', mustXCol)
+    if (sumArr(mustXCol) > 0) {
+      continue;
+    }
     let xCol = column(x, j);
     let serverF = xCol.indexOf(1);
     // 更新竞争力函数
@@ -230,27 +265,44 @@ while (loopTimes > MaxLoopTimes) {
       y[serverF] = 0;
     }
     newCompete();
+    console.log('x', x)
     // 争夺顾客
     let KCol = column(K, j);
     let maxIndex = KCol.indexOf(Math.max(...KCol));
     if (serverF !== maxIndex) {
       // 如果竞争力最大的设施容量已满
-      if (sumArr(x[maxIndex]) >= U) {
+      if (sumArr(x[maxIndex]) == U) {
+        const ConstKRow = copyMatrix(K[maxIndex]);
+        let KRow = copyMatrix(K[maxIndex]);
+        KRow.sort();
+        for (let index = 0; index < C; index++) {
+          let KRowMinNum = KRow[index];
+          let KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
+          if (x[maxIndex][KRowMinIndex]) {
+            x[maxIndex][KRowMinIndex] = 1;
+            y[maxIndex] = 1;
+            break;
+          }
+        }
         let minIndex = K[maxIndex].indexOf(Math.min(...K[maxIndex]));
         x[maxIndex][minIndex] = 0;
         x[serverF][minIndex] = 1;
       }
       x[maxIndex][j] = 1;
       y[maxIndex] = 1;
+      console.log('x', x);
       break;
     } else {
       x[maxIndex][j] = 1;
       y[maxIndex] = 1;
     }
   }
+  if (j === C) {
+    break;
+  }
   loopTimes++;
 }
-console.log('x', x);
+// console.log('x', x);
 /** 
  * 第五步：资源交换
 */
