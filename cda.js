@@ -77,7 +77,10 @@ const column = (matrix, index) => {
   return column;
 }
 const compete = (i, j, x, y, H, D) => {
-  return 
+  if (y[i] === 1) {
+    return 1/D[i][j];
+  }
+  return 1/(H[i] + D[i][j]);
 }
 /** 参数 
  * F设施数
@@ -134,6 +137,9 @@ for (let i = 0; i < F; i++) {
 // console.log('mustX, mustY', mustX, mustY);
 
 // 第二步：计算竞争力函数矩阵
+x = mustX;
+y = mustY;
+let K = rand(F, C, [0, 1]);
 
 // 第三步：分配顾客
 
