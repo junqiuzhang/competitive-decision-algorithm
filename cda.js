@@ -96,6 +96,22 @@ const compete = (i, j, x, y, H, D) => {
   }
   return 1/(H[i] + D[i][j]);
 }
+// 目标函数
+const costFunction = (x, H, D, U) => {
+  let sum, min = 0;
+  for(let i = 0; i < x.length; i++){
+    xi = x[i];
+    sum = 0;
+    for(let j = 0; j < xi.length; j++){
+      sum += xi[j];
+      if(xi[j]){
+        min += D[i][j];
+      }
+    }
+    min = min + H[i] * Math.ceil(sum / U);
+  }
+  return min;
+}
 /** 参数 
  * F设施数
  * C顾客数
@@ -204,7 +220,8 @@ const MaxLoopTimes = 1000;
 let loopTimes = 0;
 
 while (loopTimes > MaxLoopTimes) {
-  for (let j = 0; j < C; j++) {
+  let j = 0;
+  for (j = 0; j < C; j++) {
     let xCol = column(x, j);
     let serverF = xCol.indexOf(1);
     // 更新竞争力函数
@@ -216,16 +233,24 @@ while (loopTimes > MaxLoopTimes) {
     // 争夺顾客
     let KCol = column(K, j);
     let maxIndex = KCol.indexOf(Math.max(...KCol));
-    if (maxIndex === serverF) {
-      x[serverF][j] = 1;
-      y[serverF] = 1;
-    }
-    for (let i = 0; i < F; i++) {
-
+    if (serverF !== maxIndex) {
+      // 如果竞争力最大的设施容量已满
+      if (sumArr(x[maxIndex]) >= U) {
+        let minIndex = K[maxIndex].indexOf(Math.min(...K[maxIndex]));
+        x[maxIndex][minIndex] = 0;
+        x[serverF][minIndex] = 1;
+      }
+      x[maxIndex][j] = 1;
+      y[maxIndex] = 1;
+      break;
+    } else {
+      x[maxIndex][j] = 1;
+      y[maxIndex] = 1;
     }
   }
   loopTimes++;
 }
+console.log('x', x);
 /** 
  * 第五步：资源交换
 */
@@ -233,5 +258,5 @@ while (loopTimes > MaxLoopTimes) {
 /** 
  * 第六步：输出结果
 */
-
-// console.log(x, y);
+let cost = costFunction(x, H, D, U);
+console.log('x', x, 'y', y, 'cost', cost);
