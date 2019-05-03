@@ -1,7 +1,7 @@
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
-const Mode = false;
+const Mode = true;
 // 随机矩阵
 const rand = (x, y, scope) => {
   if (!scope || !scope.length || scope[0] > scope[1]) {
