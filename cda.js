@@ -246,70 +246,89 @@ console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
-const MaxLoopTimes = 1000;
-let loopTimes = 0;
+const FacilityCompeteCustom = () => {
+  const MaxLoopTimes = 1000;
+  let loopTimes = 0;
 
-while (loopTimes <= MaxLoopTimes) {
-  let j = 0;
-  for (j = 0; j < C; j++) {
-    let mustXCol = column(mustX, j);
-    if (sumArr(mustXCol) > 0) {
-      continue;
-    }
-    let xCol = column(x, j);
-    let serverF = xCol.indexOf(1);
-    // 更新竞争力函数
-    x[serverF][j] = 0;
-    if (sumArr(x[serverF]) === 0) {
-      y[serverF] = 0;
-    }
-    newCompete();
-    console.log('x', x)
-    // 争夺顾客
-    // 竞争力最大的设施
-    let KCol = column(K, j);
-    let maxIndex = KCol.indexOf(Math.max(...KCol));
-    // 如果竞争力最大的设施没有服务顾客
-    if (serverF !== maxIndex) {
-      // 如果竞争力最大的设施容量已满
-      if (sumArr(x[maxIndex]) == U) {
-        const ConstKRow = copyMatrix(K[maxIndex]);
-        let KRow = copyMatrix(K[maxIndex]);
-        KRow.sort();
-        for (let index = 0; index < C; index++) {
-          let KRowMinNum = KRow[index];
-          let KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
-          console.log('KRowMinIndex', KRowMinIndex)
-          if (x[maxIndex][KRowMinIndex] === 1) {
-            x[maxIndex][KRowMinIndex] = 0;
-            x[serverF][KRowMinIndex] = 1;
-            break;
+  while (loopTimes <= MaxLoopTimes) {
+    let j = 0;
+    for (j = 0; j < C; j++) {
+      let mustXCol = column(mustX, j);
+      if (sumArr(mustXCol) > 0) {
+        continue;
+      }
+      let xCol = column(x, j);
+      let serverF = xCol.indexOf(1);
+      // 更新竞争力函数
+      x[serverF][j] = 0;
+      if (sumArr(x[serverF]) === 0) {
+        y[serverF] = 0;
+      }
+      newCompete();
+      // 争夺顾客
+      // 竞争力最大的设施
+      let KCol = column(K, j);
+      let maxIndex = KCol.indexOf(Math.max(...KCol));
+      // 如果竞争力最大的设施没有服务顾客
+      if (serverF !== maxIndex) {
+        // 如果竞争力最大的设施容量已满
+        if (sumArr(x[maxIndex]) == U) {
+          const ConstKRow = copyMatrix(K[maxIndex]);
+          let KRow = copyMatrix(K[maxIndex]);
+          KRow.sort();
+          for (let index = 0; index < C; index++) {
+            let KRowMinNum = KRow[index];
+            let KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
+            if (x[maxIndex][KRowMinIndex] === 1) {
+              x[maxIndex][KRowMinIndex] = 0;
+              x[serverF][KRowMinIndex] = 1;
+              break;
+            }
           }
+          x[maxIndex][j] = 1;
+        } else {
+          x[maxIndex][j] = 1;
+          y[maxIndex] = 1;
         }
-        x[maxIndex][j] = 1;
+        break;
       } else {
+        // 如果竞争力最大的设施已经服务顾客
         x[maxIndex][j] = 1;
         y[maxIndex] = 1;
       }
-      break;
-    } else {
-      console.log('===')
-      // 如果竞争力最大的设施已经服务顾客
-      x[maxIndex][j] = 1;
-      y[maxIndex] = 1;
+      // console.log('x', x);
     }
-    console.log('x', x);
+    if (j === C) {
+      break;
+    }
+    loopTimes++;
   }
-  if (j === C) {
-    break;
-  }
-  loopTimes++;
 }
+FacilityCompeteCustom();
 // console.log('x', x);
 /** 
  * 第五步：资源交换
 */
-
+const MaxExchangeTimes = 100;
+let exchangeTimes = 0;
+while (exchangeTimes < MaxExchangeTimes) {
+  let first = rand(1, 1, [0, C]);
+  let second = rand(1, 1, [0, C]);
+  if (first !== second) {
+    let firstCol = column(x, first);
+    let secondCol = column(x, first);
+    let firstIndex = firstCol.indexOf(1);
+    let secondIndex = secondCol.indexOf(1);
+    if (firstIndex !== secondIndex) {
+      x[firstIndex][second] = 1;
+      x[secondIndex][first] = 1;
+      x[firstIndex][first] = 0;
+      x[secondIndex][second] = 0
+    }
+    FacilityCompeteCustom();
+  }
+  exchangeTimes++;
+}
 /** 
  * 第六步：输出结果
 */
