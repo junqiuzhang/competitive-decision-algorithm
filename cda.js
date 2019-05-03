@@ -1,3 +1,7 @@
+/**
+ * Mode: true--强容量限制， false--软容量限制
+ */
+const Mode = true;
 // 随机矩阵
 const rand = (x, y, scope) => {
   if (!scope || !scope.length || scope[0] > scope[1]) {
@@ -116,6 +120,13 @@ const compete = (i, j, x, y, H, D) => {
   }
   return 1 / (H[i] + D[i][j]);
 }
+// 竞争力函数
+const competeSoft = (i, j, x, y, H, D, U) => {
+  if (sumArr(x[i]) % U > 0) {
+    return 1 / D[i][j];
+  }
+  return 1 / (H[i] + D[i][j]);
+}
 // 目标函数
 const costFunction = (x, H, D, U) => {
   let sum, min = 0;
@@ -167,16 +178,16 @@ const expectCostFunction = () => {
 const F = 4;
 const C = 5;
 const U = 2;
-const H = rand(1, F, [5, 20]);
-const D = rand(F, C, [5, 20]);
+// const H = rand(1, F, [5, 20]);
+// const D = rand(F, C, [5, 20]);
 
-// const H = [10, 29, 22, 16];
-// const D = [
-//   [3, 7, 12, 13, 14],
-//   [17, 13, 14, 16, 17],
-//   [14, 9, 9, 10, 6],
-//   [15, 10, 8, 6, 3]
-// ];
+const H = [10, 29, 22, 16];
+const D = [
+  [3, 7, 12, 13, 14],
+  [17, 13, 14, 16, 17],
+  [14, 9, 9, 10, 6],
+  [15, 10, 8, 6, 3]
+];
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -255,8 +266,15 @@ let newCompete = () => {
     }
   }
 }
-newCompete();
-// console.log('K', K);
+let newCompeteSoft = () => {
+  for (let i = 0; i < F; i++) {
+    for (let j = 0; j < C; j++) {
+      K[i][j] = compete(i, j, x, y, H, D, U);
+    }
+  }
+}
+Mode ? newCompete() : newCompeteSoft();
+console.log('K', K);
 /** 
  * 第三步：分配顾客
 */
@@ -278,7 +296,7 @@ for (let j = 0; j < C; j++) {
 /** 
  * 第四步：争夺顾客
 */
-const FacilityCompeteCustom = () => {
+const FacilityCompeteCustom = (x) => {
   const MaxLoopTimes = 1000;
   let loopTimes = 0;
 
@@ -296,7 +314,7 @@ const FacilityCompeteCustom = () => {
       if (sumArr(x[serverF]) === 0) {
         y[serverF] = 0;
       }
-      newCompete();
+      Mode ? newCompete() : newCompeteSoft();
       // 争夺顾客
       // 竞争力最大的设施
       let KCol = column(K, j);
@@ -304,7 +322,7 @@ const FacilityCompeteCustom = () => {
       // 如果竞争力最大的设施没有服务顾客
       if (serverF !== maxIndex) {
         // 如果竞争力最大的设施容量已满
-        if (sumArr(x[maxIndex]) == U) {
+        if (sumArr(x[maxIndex]) == U && Mode) {
           const ConstKRow = copyMatrix(K[maxIndex]);
           let KRow = copyMatrix(K[maxIndex]);
           KRow.sort();
@@ -337,14 +355,16 @@ const FacilityCompeteCustom = () => {
     loopTimes++;
   }
 }
-FacilityCompeteCustom();
-// console.log('x', x);
+FacilityCompeteCustom(x);
+console.log('x', x);
 /** 
  * 第五步：资源交换
 */
+let cost = costFunction(x, H, D, U);
 const MaxExchangeTimes = 100;
 let exchangeTimes = 0;
 while (exchangeTimes < MaxExchangeTimes) {
+  let newX = copyMatrix(x);
   let first = rand(1, 1, [0, C]);
   let second = rand(1, 1, [0, C]);
   if (first !== second) {
@@ -353,23 +373,29 @@ while (exchangeTimes < MaxExchangeTimes) {
     let firstIndex = firstCol.indexOf(1);
     let secondIndex = secondCol.indexOf(1);
     if (firstIndex !== secondIndex) {
-      x[firstIndex][second] = 1;
-      x[secondIndex][first] = 1;
-      x[firstIndex][first] = 0;
-      x[secondIndex][second] = 0
+      newX[firstIndex][second] = 1;
+      newX[secondIndex][first] = 1;
+      newX[firstIndex][first] = 0;
+      newX[secondIndex][second] = 0
     }
-    FacilityCompeteCustom();
+    FacilityCompeteCustom(newX);
+    let newCost = costFunction(x, H, D, U);
+    if (newCost < cost) {
+      x = newX;
+      cost = newCost;
+    }
   }
   exchangeTimes++;
 }
 /** 
  * 第六步：输出结果
 */
-let cost = costFunction(x, H, D, U);
-console.log('x', x, 'y', y, 'cost', cost);
+console.log('x', x);
+console.log('cost', cost);
 
 // 期望
-newCompete();
+Mode ? newCompete() : newCompeteSoft();
 let [expectCost, expectCostX] = expectCostFunction();
-console.log('x', expectCostX, 'y', y, 'expectCost', expectCost);
+console.log('x', x);
+console.log('expectCost', expectCost);
 
