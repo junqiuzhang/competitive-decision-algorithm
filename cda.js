@@ -111,7 +111,7 @@ const sumArr = (arr) => {
 }
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
-  if (y[i] === 1) {
+  if (sumArr(x[i]) > 0) {
     return 1 / D[i][j];
   }
   return 1 / (H[i] + D[i][j]);
@@ -286,6 +286,7 @@ const FacilityCompeteCustom = () => {
             }
           }
           x[maxIndex][j] = 1;
+          y[serverF] = 1;
         } else {
           x[maxIndex][j] = 1;
           y[maxIndex] = 1;
