@@ -132,6 +132,30 @@ const costFunction = (x, H, D, U) => {
   }
   return min;
 }
+// 期望目标函数
+const expectCostFunction = () => {
+  let sum, min = 0;
+  let minX = copyMatrix(x);
+  for (let i = 0; i < x.length; i++) {
+    xi = x[i];
+    sum = 0;
+    for (let j = 0; j < xi.length; j++) {
+      sum += xi[j];
+      let sumK = 0;
+      for (let indexI = 0; indexI < x.length; indexI++) {
+        if (sumArr(x[indexI]) > 0 && y[i] > 0) {
+          sumK += K[indexI][j];
+        }
+      }
+      if (sumK) {
+        min += D[i][j] * K[i][j] / sumK;
+        minX[i][j] = K[i][j] / sumK;
+      }
+    }
+    min = min + H[i] * Math.ceil(sum / U);
+  }
+  return [min, minX];
+}
 /** 参数 
  * F设施数
  * C顾客数
@@ -143,16 +167,16 @@ const costFunction = (x, H, D, U) => {
 const F = 4;
 const C = 5;
 const U = 2;
-// const H = rand(1, F, [5, 20]);
-// const D = rand(F, C, [5, 20]);
+const H = rand(1, F, [5, 20]);
+const D = rand(F, C, [5, 20]);
 
-const H = [10, 29, 22, 16];
-const D = [
-  [3, 7, 12, 13, 14],
-  [17, 13, 14, 16, 17],
-  [14, 9, 9, 10, 6],
-  [15, 10, 8, 6, 3]
-];
+// const H = [10, 29, 22, 16];
+// const D = [
+//   [3, 7, 12, 13, 14],
+//   [17, 13, 14, 16, 17],
+//   [14, 9, 9, 10, 6],
+//   [15, 10, 8, 6, 3]
+// ];
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -212,13 +236,21 @@ let newCompete = () => {
     for (let j = 0; j < C; j++) {
       if (mustX[i][j]) {
         for (let newI = 0; newI < F; newI++) {
-          K[newI][j] = 0;
+          if (!mustX[newI][j]) {
+            K[newI][j] = 0;
+          } else {
+            K[newI][j] = 1;
+          }
         }
       }
     }
     if (sumArr(mustX[i]) === U) {
       for (let newJ = 0; newJ < C; newJ++) {
-        K[i][newJ] = 0;
+        if (!mustX[i][newJ]) {
+          K[i][newJ] = 0;
+        } else {
+          K[i][newJ] = 1;
+        }
       }
     }
   }
@@ -242,7 +274,7 @@ for (let j = 0; j < C; j++) {
     }
   }
 }
-console.log('x', x);
+// console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
@@ -335,3 +367,9 @@ while (exchangeTimes < MaxExchangeTimes) {
 */
 let cost = costFunction(x, H, D, U);
 console.log('x', x, 'y', y, 'cost', cost);
+
+// 期望
+newCompete();
+let [expectCost, expectCostX] = expectCostFunction();
+console.log('x', expectCostX, 'y', y, 'expectCost', expectCost);
+
