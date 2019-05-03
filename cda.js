@@ -1,7 +1,7 @@
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
-const Mode = true;
+const Mode = false;
 // 随机矩阵
 const rand = (x, y, scope) => {
   if (!scope || !scope.length || scope[0] > scope[1]) {
@@ -269,7 +269,7 @@ let newCompete = () => {
 let newCompeteSoft = () => {
   for (let i = 0; i < F; i++) {
     for (let j = 0; j < C; j++) {
-      K[i][j] = compete(i, j, x, y, H, D, U);
+      K[i][j] = competeSoft(i, j, x, y, H, D, U);
     }
   }
 }
