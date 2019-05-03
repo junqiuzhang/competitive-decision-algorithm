@@ -253,7 +253,6 @@ while (loopTimes <= MaxLoopTimes) {
   let j = 0;
   for (j = 0; j < C; j++) {
     let mustXCol = column(mustX, j);
-    console.log('mustXCol', mustXCol)
     if (sumArr(mustXCol) > 0) {
       continue;
     }
@@ -267,8 +266,10 @@ while (loopTimes <= MaxLoopTimes) {
     newCompete();
     console.log('x', x)
     // 争夺顾客
+    // 竞争力最大的设施
     let KCol = column(K, j);
     let maxIndex = KCol.indexOf(Math.max(...KCol));
+    // 如果竞争力最大的设施没有服务顾客
     if (serverF !== maxIndex) {
       // 如果竞争力最大的设施容量已满
       if (sumArr(x[maxIndex]) == U) {
@@ -278,24 +279,26 @@ while (loopTimes <= MaxLoopTimes) {
         for (let index = 0; index < C; index++) {
           let KRowMinNum = KRow[index];
           let KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
-          if (x[maxIndex][KRowMinIndex]) {
-            x[maxIndex][KRowMinIndex] = 1;
-            y[maxIndex] = 1;
+          console.log('KRowMinIndex', KRowMinIndex)
+          if (x[maxIndex][KRowMinIndex] === 1) {
+            x[maxIndex][KRowMinIndex] = 0;
+            x[serverF][KRowMinIndex] = 1;
             break;
           }
         }
-        let minIndex = K[maxIndex].indexOf(Math.min(...K[maxIndex]));
-        x[maxIndex][minIndex] = 0;
-        x[serverF][minIndex] = 1;
+        x[maxIndex][j] = 1;
+      } else {
+        x[maxIndex][j] = 1;
+        y[maxIndex] = 1;
       }
-      x[maxIndex][j] = 1;
-      y[maxIndex] = 1;
-      console.log('x', x);
       break;
     } else {
+      console.log('===')
+      // 如果竞争力最大的设施已经服务顾客
       x[maxIndex][j] = 1;
       y[maxIndex] = 1;
     }
+    console.log('x', x);
   }
   if (j === C) {
     break;
