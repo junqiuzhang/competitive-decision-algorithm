@@ -175,19 +175,22 @@ const expectCostFunction = () => {
  * D服务费用矩阵
 */
 
-const F = 4;
-const C = 5;
+const F = 14;
+const C = 15;
 const U = 2;
-// const H = rand(1, F, [5, 20]);
-// const D = rand(F, C, [5, 20]);
+const H = rand(1, F, [5, 20]);
+const D = rand(F, C, [5, 20]);
 
-const H = [10, 29, 22, 16];
-const D = [
-  [3, 7, 12, 13, 14],
-  [17, 13, 14, 16, 17],
-  [14, 9, 9, 10, 6],
-  [15, 10, 8, 6, 3]
-];
+// const F = 4;
+// const C = 5;
+// const U = 2;
+// const H = [10, 29, 22, 16];
+// const D = [
+//   [3, 7, 12, 13, 14],
+//   [17, 13, 14, 16, 17],
+//   [14, 9, 9, 10, 6],
+//   [15, 10, 8, 6, 3]
+// ];
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -274,7 +277,7 @@ let newCompeteSoft = () => {
   }
 }
 Mode ? newCompete() : newCompeteSoft();
-console.log('K', K);
+// console.log('K', K);
 /** 
  * 第三步：分配顾客
 */
@@ -356,7 +359,7 @@ const FacilityCompeteCustom = (x) => {
   }
 }
 FacilityCompeteCustom(x);
-console.log('x', x);
+// console.log('x', x);
 /** 
  * 第五步：资源交换
 */
@@ -390,12 +393,12 @@ while (exchangeTimes < MaxExchangeTimes) {
 /** 
  * 第六步：输出结果
 */
-console.log('x', x);
+// console.log('x', x);
 console.log('cost', cost);
 
 // 期望
 Mode ? newCompete() : newCompeteSoft();
 let [expectCost, expectCostX] = expectCostFunction();
-console.log('x', x);
+// console.log('x', x);
 console.log('expectCost', expectCost);
 
