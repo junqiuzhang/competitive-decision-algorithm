@@ -191,6 +191,17 @@ const D = rand(F, C, [5, 20]);
 //   [14, 9, 9, 10, 6],
 //   [15, 10, 8, 6, 3]
 // ];
+
+// const F = 4;
+// const C = 5;
+// const U = 2;
+// const H = [8, 7, 6, 19];
+// const D = [
+//   [14, 8, 11, 10, 10],
+//   [16, 16, 13, 14, 17],
+//   [11, 5, 5, 7, 11],
+//   [17, 6, 13, 19, 16]
+// ];
 console.log('H, D', H, D)
 /**
  * cda算法
@@ -286,6 +297,11 @@ for (let j = 0; j < C; j++) {
   let KCol = column(K, j);
   KCol.sort();
   for (let index = 0; index < F; index++) {
+    // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
+    let mustXCol = column(mustX, j);
+    if (sumArr(mustXCol) > 0) {
+      continue;
+    }
     let maxNum = KCol[KCol.length - 1 - index];
     let maxIndex = ConstKCol.indexOf(maxNum);
     if (sumArr(x[maxIndex]) < U) {
