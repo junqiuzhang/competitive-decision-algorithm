@@ -508,7 +508,7 @@ for (let i = 0; i < MaxLoopNumber; i++) {
     if (presentCost < minCost) {
       minCost = presentCost;
       minCostX = presentX;
-      // console.log( minCostX);
+      console.log(minCostX, minCost);
     }
   }
 }
