@@ -1,7 +1,7 @@
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
-const Mode = true;
+const Mode = false;
 // 随机矩阵
 const rand = (x, y, scope) => {
   if (!scope || !scope.length || scope[0] > scope[1]) {
@@ -454,3 +454,58 @@ let [expectCost, expectCostX] = expectCostFunction(x, H, D, U);
 // console.log('expectCostX', expectCostX);
 console.log('expectCost', expectCost);
 
+/**
+ * 精确解
+ */
+const getX = (num, F, C) => {
+  let arrX = [];
+  let n = num;
+  while (Math.floor(n / F) > 0) {
+    arrX.push(n % F);
+    n = Math.floor(n / F);
+  }
+  arrX.push(n % F);
+  if (C - arrX.length > 1) {
+    let arrXFirst = rand(1, C - arrX.length, [0, 1]);
+    arrX = arrX.concat(arrXFirst);
+  } else if (C - arrX.length === 1) {
+    arrX = arrX.concat([0]);
+  }
+  arrX.reverse();
+  let x = rand(F, C, [0, 1]);
+  for (let j = 0; j < arrX.length; j++) {
+    x[arrX[j]][j] = 1;
+  }
+  return x;
+}
+const check = (x) => {
+  let che = true;
+  let sum;
+  for(let i = 0; i < x.length; i++){
+    xi = x[i];
+    sum = 0;
+    for(let j = 0; j < xi.length; j++){
+      sum += xi[j];
+    }
+    if(sum > U || sum < 0){
+      che = false;
+    }
+  }
+  return che;
+}
+const MaxLoopNumber = Math.pow(F, C);
+let minCost = 999999;
+let minCostX = [];
+for (let i = 0; i < MaxLoopNumber; i++) {
+  let presentX = getX(i, F, C);
+  let is = check(presentX);
+  if (is || !Mode) {
+    let presentCost = costFunction(presentX, H, D, U);
+    if (presentCost < minCost) {
+      minCost = presentCost;
+      minCostX = presentX;
+      // console.log( minCostX);
+    }
+  }
+}
+console.log('minCostX', minCostX, 'minCost', minCost);
