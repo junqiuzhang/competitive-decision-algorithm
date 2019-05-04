@@ -1,3 +1,5 @@
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
@@ -493,23 +495,60 @@ const check = (x) => {
   }
   return che;
 }
-const MaxLoopNumber = Math.pow(F, C);
-let minCost = 999999;
-let minCostX = [];
-for (let i = 0; i < MaxLoopNumber; i++) {
-  let presentX = getX(i, F, C);
-  let is = true;
-  // 强容量限制的设施选址问题需要检查解
-  if (Mode) {
-    is = check(presentX);
-  }
-  if (is) {
-    let presentCost = costFunction(presentX, H, D, U);
-    if (presentCost < minCost) {
-      minCost = presentCost;
-      minCostX = presentX;
-      console.log(minCostX, minCost);
+const solve = (start, end) => {
+  let minCost = 999999;
+  let minCostX = [];
+  for (let i = start; i < end; i++) {
+    let presentX = getX(i, F, C);
+    let is = true;
+    // 强容量限制的设施选址问题需要检查解
+    if (Mode) {
+      is = check(presentX);
+    }
+    if (is) {
+      let presentCost = costFunction(presentX, H, D, U);
+      if (presentCost < minCost) {
+        minCost = presentCost;
+        minCostX = presentX;
+        // console.log(minCostX, minCost);
+      }
     }
   }
+  return minCost;
 }
+
+if (cluster.isMaster) {
+  const seqArr = [44, 42, 43, 44]
+  let endTaskNum = 0
+
+  console.time('main')
+  console.log(`[Master]# Master starts running. pid: ${process.pid}`)
+
+  const MaxLoopNumber = Math.pow(F, C);
+
+  for (let i = 0; i < numCPUs; i++) {
+    const worker = cluster.fork();
+    const start = Math.floor(MaxLoopNumber / numCPUs) * i;
+    const end = Math.floor(MaxLoopNumber / numCPUs) * (i + 1) + 1;
+    worker.send(start, end);
+  }
+  cluster.on('message', (worker, message) => {
+    console.log(`[Master]# Worker ${worker.id}: ${message}`)
+    endTaskNum++
+    if (endTaskNum === 4) {
+      console.timeEnd('main')
+      cluster.disconnect()
+    }
+  })
+  cluster.on('exit', (worker, code, signal) => console.log(`[Master]# Worker ${worker.id} died.`))
+} else {
+  process.on('message', seq => {
+    console.log(`[Worker]# starts calculating...`)
+    const start = Date.now()
+    const result = solve(seq)
+    console.log(`[Worker]# The result of task ${process.pid} is ${result}, taking ${Date.now() - start} ms.`)
+    process.send('My task has ended.')
+  })
+}
+
 console.log('minCostX', minCostX, 'minCost', minCost);
