@@ -524,13 +524,9 @@ if (cluster.isMaster) {
   console.time('main')
   console.log(`[Master]# Master starts running. pid: ${process.pid}`)
 
-  const MaxLoopNumber = Math.pow(F, C);
-
   for (let i = 0; i < numCPUs; i++) {
     const worker = cluster.fork();
-    const start = Math.floor(MaxLoopNumber / numCPUs) * i;
-    const end = Math.floor(MaxLoopNumber / numCPUs) * (i + 1) + 1;
-    worker.send(start, end);
+    worker.send(i);
   }
   cluster.on('message', (worker, message) => {
     console.log(`[Master]# Worker ${worker.id}: ${message}`)
@@ -545,10 +541,12 @@ if (cluster.isMaster) {
   process.on('message', seq => {
     console.log(`[Worker]# starts calculating...`)
     const start = Date.now()
-    const result = solve(seq)
+    const MaxLoopNumber = Math.pow(F, C);
+    const startNum = Math.floor(MaxLoopNumber / numCPUs) * seq;
+    const endNum = Math.floor(MaxLoopNumber / numCPUs) * (seq + 1) + 1;
+    const result = solve(startNum, endNum)
     console.log(`[Worker]# The result of task ${process.pid} is ${result}, taking ${Date.now() - start} ms.`)
     process.send('My task has ended.')
   })
 }
 
-console.log('minCostX', minCostX, 'minCost', minCost);

@@ -1,0 +1,22 @@
+{
+  "name": "cda",
+  "version": "1.0.0",
+  "description": "cda算法",
+  "main": "cda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangJJQQ/hello-world.git"
+  },
+  "author": "张君秋",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhangJJQQ/hello-world/issues"
+  },
+  "homepage": "https://github.com/zhangJJQQ/hello-world#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
