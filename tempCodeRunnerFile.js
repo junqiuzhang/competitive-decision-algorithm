@@ -1,10 +1,7 @@
-st F = 4;
-const C = 5;
-const U = 2;
-const H = [10, 29, 22, 16];
-const D = [
-  [3, 7, 12, 13, 14],
-  [17, 13, 14, 16, 17],
-  [14, 9, 9, 10, 6],
-  [15, 10, 8, 6, 3]
-];
+axIndex][KRowMinIndex] = 1;
+            // x[serverF][KRowMinIndex] = 0;
+            // x[maxIndex][j] = 0;
+            // x[serverF][j] = 1;
+            // if (sumArr(x[serverF]) === 0) {
+            //   y[serverF] = 0;
+            // }

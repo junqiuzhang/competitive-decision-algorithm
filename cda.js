@@ -317,7 +317,7 @@ Mode ? newCompete() : newCompeteSoft();
  * 第四步：争夺顾客
 */
 const FacilityCompeteCustom = (x, y) => {
-  const MaxLoopTimes = 1000;
+  const MaxLoopTimes = 1;
   let loopTimes = 0;
   let cost = costFunction(x, H, D, U);
   while (loopTimes <= MaxLoopTimes) {
@@ -406,48 +406,51 @@ FacilityCompeteCustom(x, y);
 /** 
  * 第五步：资源交换
 */
-const MaxExchangeTimes = 100;
+const MaxExchangeTimes = 1;
 let exchangeTimes = 0;
 
 Mode ? newCompete() : newCompeteSoft();
 let cost = costFunction(x, H, D, U);
 
-while (exchangeTimes < MaxExchangeTimes) {
-  let newX = copyMatrix(x);
-  let newY = copyMatrix(y);
-  let first = rand(1, 1, [0, C]);
-  let second = rand(1, 1, [0, C]);
-  if (first !== second) {
-    let firstCol = column(newX, first);
-    let secondCol = column(newX, first);
-    let firstIndex = firstCol.indexOf(1);
-    let secondIndex = secondCol.indexOf(1);
-    if (firstIndex !== secondIndex) {
-      newX[firstIndex][second] = 1;
-      newX[secondIndex][first] = 1;
-      newX[firstIndex][first] = 0;
-      newX[secondIndex][second] = 0
+const FacilityExchangeCustom = () => {
+  while (exchangeTimes < MaxExchangeTimes) {
+    let newX = copyMatrix(x);
+    let newY = copyMatrix(y);
+    let first = rand(1, 1, [0, C]);
+    let second = rand(1, 1, [0, C]);
+    if (first !== second) {
+      let firstCol = column(newX, first);
+      let secondCol = column(newX, first);
+      let firstIndex = firstCol.indexOf(1);
+      let secondIndex = secondCol.indexOf(1);
+      if (firstIndex !== secondIndex) {
+        newX[firstIndex][second] = 1;
+        newX[secondIndex][first] = 1;
+        newX[firstIndex][first] = 0;
+        newX[secondIndex][second] = 0
+      }
+      FacilityCompeteCustom(newX, newY);
+      let newCost = costFunction(newX, H, D, U);
+      if (newCost < cost) {
+        x = newX;
+        y = newY;
+        cost = newCost;
+      }
     }
-    FacilityCompeteCustom(newX, newY);
-    let newCost = costFunction(newX, H, D, U);
-    if (newCost < cost) {
-      x = newX;
-      y = newY;
-      cost = newCost;
-    }
+    exchangeTimes++;
   }
-  exchangeTimes++;
 }
+FacilityExchangeCustom();
 /** 
  * 第六步：输出结果
 */
 cost = costFunction(x, H, D, U);
-console.log('x', x);
+// console.log('x', x);
 console.log('cost', cost);
 
 // 期望
 Mode ? newCompete() : newCompeteSoft();
 let [expectCost, expectCostX] = expectCostFunction(x, H, D, U);
-// console.log('x', x);
+// console.log('expectCostX', expectCostX);
 console.log('expectCost', expectCost);
 
