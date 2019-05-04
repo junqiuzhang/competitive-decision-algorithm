@@ -175,9 +175,9 @@ const expectCostFunction = (x, H, D, U) => {
  * D服务费用矩阵
 */
 
-const F = 4;
-const C = 5;
-const U = 2;
+const F = 30;
+const C = 30;
+const U = 3;
 const H = rand(1, F, [5, 20]);
 const D = rand(F, C, [5, 20]);
 
@@ -498,8 +498,12 @@ let minCost = 999999;
 let minCostX = [];
 for (let i = 0; i < MaxLoopNumber; i++) {
   let presentX = getX(i, F, C);
-  let is = check(presentX);
-  if (is || !Mode) {
+  let is = true;
+  // 强容量限制的设施选址问题需要检查解
+  if (Mode) {
+    is = check(presentX);
+  }
+  if (is) {
     let presentCost = costFunction(presentX, H, D, U);
     if (presentCost < minCost) {
       minCost = presentCost;
