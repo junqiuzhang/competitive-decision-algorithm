@@ -144,7 +144,7 @@ const costFunction = (x, H, D, U) => {
   return min;
 }
 // 期望目标函数
-const expectCostFunction = () => {
+const expectCostFunction = (x, H, D, U) => {
   let sum, min = 0;
   let minX = copyMatrix(x);
   for (let i = 0; i < x.length; i++) {
@@ -175,8 +175,8 @@ const expectCostFunction = () => {
  * D服务费用矩阵
 */
 
-const F = 14;
-const C = 15;
+const F = 4;
+const C = 5;
 const U = 2;
 const H = rand(1, F, [5, 20]);
 const D = rand(F, C, [5, 20]);
@@ -295,21 +295,24 @@ for (let j = 0; j < C; j++) {
     }
   }
 }
+Mode ? newCompete() : newCompeteSoft();
 // console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
-const FacilityCompeteCustom = (x) => {
+const FacilityCompeteCustom = (x, y) => {
   const MaxLoopTimes = 1000;
   let loopTimes = 0;
-
+  let cost = costFunction(x, H, D, U);
   while (loopTimes <= MaxLoopTimes) {
     let j = 0;
     for (j = 0; j < C; j++) {
+      // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
       let mustXCol = column(mustX, j);
       if (sumArr(mustXCol) > 0) {
         continue;
       }
+      // 当前服务顾客的设施
       let xCol = column(x, j);
       let serverF = xCol.indexOf(1);
       // 更新竞争力函数
@@ -318,39 +321,63 @@ const FacilityCompeteCustom = (x) => {
         y[serverF] = 0;
       }
       Mode ? newCompete() : newCompeteSoft();
-      // 争夺顾客
+      /**
+       * 争夺顾客  
+      */
       // 竞争力最大的设施
       let KCol = column(K, j);
       let maxIndex = KCol.indexOf(Math.max(...KCol));
       // 如果竞争力最大的设施没有服务顾客
       if (serverF !== maxIndex) {
-        // 如果竞争力最大的设施容量已满
-        if (sumArr(x[maxIndex]) == U && Mode) {
+        // 强容量限制的设施选址问题中如果竞争力最大的设施容量已满，则换出竞争力最大的设施服务的一个顾客
+        if (Mode && sumArr(x[maxIndex]) == U) {
+          // 换出竞争力最大的设施服务的顾客中竞争力最小的一个顾客
           const ConstKRow = copyMatrix(K[maxIndex]);
           let KRow = copyMatrix(K[maxIndex]);
+          let KRowMinNum, KRowMinIndex;
           KRow.sort();
           for (let index = 0; index < C; index++) {
-            let KRowMinNum = KRow[index];
-            let KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
+            KRowMinNum = KRow[index];
+            KRowMinIndex = ConstKRow.indexOf(KRowMinNum);
             if (x[maxIndex][KRowMinIndex] === 1) {
               x[maxIndex][KRowMinIndex] = 0;
               x[serverF][KRowMinIndex] = 1;
               break;
             }
           }
+          // 分配顾客给设施
           x[maxIndex][j] = 1;
           y[serverF] = 1;
+          // 如果分配顾客可以使总费用函数更小，则分配顾客给设施
+          let newCost = costFunction(x, H, D, U);
+          if (newCost < cost) {
+            cost = newCost;
+            break;
+          } else {
+            x[maxIndex][KRowMinIndex] = 1;
+            x[serverF][KRowMinIndex] = 0;
+            x[maxIndex][j] = 0;
+            x[serverF][j] = 1;
+            if (sumArr(x[serverF]) === 0) {
+              y[serverF] = 0;
+            }
+          }
         } else {
+          // 如果软容量限制的设施选址问题中或竞争力最大的设施容量未满，则分配顾客给设施
           x[maxIndex][j] = 1;
           y[maxIndex] = 1;
+          // 如果分配顾客可以使总费用函数更小，则分配顾客给设施
+          let newCost = costFunction(x, H, D, U);
+          if (newCost < cost) {
+            cost = newCost;
+            break;
+          }
         }
-        break;
       } else {
         // 如果竞争力最大的设施已经服务顾客
         x[maxIndex][j] = 1;
         y[maxIndex] = 1;
       }
-      // console.log('x', x);
     }
     if (j === C) {
       break;
@@ -358,21 +385,25 @@ const FacilityCompeteCustom = (x) => {
     loopTimes++;
   }
 }
-FacilityCompeteCustom(x);
+FacilityCompeteCustom(x, y);
 // console.log('x', x);
 /** 
  * 第五步：资源交换
 */
-let cost = costFunction(x, H, D, U);
 const MaxExchangeTimes = 100;
 let exchangeTimes = 0;
+
+Mode ? newCompete() : newCompeteSoft();
+let cost = costFunction(x, H, D, U);
+
 while (exchangeTimes < MaxExchangeTimes) {
   let newX = copyMatrix(x);
+  let newY = copyMatrix(y);
   let first = rand(1, 1, [0, C]);
   let second = rand(1, 1, [0, C]);
   if (first !== second) {
-    let firstCol = column(x, first);
-    let secondCol = column(x, first);
+    let firstCol = column(newX, first);
+    let secondCol = column(newX, first);
     let firstIndex = firstCol.indexOf(1);
     let secondIndex = secondCol.indexOf(1);
     if (firstIndex !== secondIndex) {
@@ -381,10 +412,11 @@ while (exchangeTimes < MaxExchangeTimes) {
       newX[firstIndex][first] = 0;
       newX[secondIndex][second] = 0
     }
-    FacilityCompeteCustom(newX);
-    let newCost = costFunction(x, H, D, U);
+    FacilityCompeteCustom(newX, newY);
+    let newCost = costFunction(newX, H, D, U);
     if (newCost < cost) {
       x = newX;
+      y = newY;
       cost = newCost;
     }
   }
@@ -393,12 +425,13 @@ while (exchangeTimes < MaxExchangeTimes) {
 /** 
  * 第六步：输出结果
 */
-// console.log('x', x);
+cost = costFunction(x, H, D, U);
+console.log('x', x);
 console.log('cost', cost);
 
 // 期望
 Mode ? newCompete() : newCompeteSoft();
-let [expectCost, expectCostX] = expectCostFunction();
+let [expectCost, expectCostX] = expectCostFunction(x, H, D, U);
 // console.log('x', x);
 console.log('expectCost', expectCost);
 
