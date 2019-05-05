@@ -1,5 +1,5 @@
 const { rand } = require('./function');
-const { Mode, costFunction } = require('./cda');
+const { Mode } = require('./cda');
 /**
  * 精确解
  */
@@ -24,8 +24,27 @@ const getX = (num, F, C) => {
   }
   return x;
 }
+const fixX = (x, num, F, C) => {
+  let arrX = [];
+  let n = num;
+  while (Math.floor(n / F) > 0) {
+    arrX.push(n % F);
+    n = Math.floor(n / F);
+  }
+  arrX.push(n % F);
+  if (C - arrX.length > 1) {
+    let arrXFirst = rand(1, C - arrX.length, [0, 1]);
+    arrX = arrX.concat(arrXFirst);
+  } else if (C - arrX.length === 1) {
+    arrX = arrX.concat([0]);
+  }
+  arrX.reverse();
+  for (let j = 0; j < arrX.length; j++) {
+    x[arrX[j]][j] = 1;
+  }
+  return x;
+}
 const check = (x) => {
-  let che = true;
   let sum;
   for(let i = 0; i < x.length; i++){
     xi = x[i];
@@ -34,16 +53,20 @@ const check = (x) => {
       sum += xi[j];
     }
     if(sum > U || sum < 0){
-      che = false;
+      return false;
     }
   }
-  return che;
+  return true;
+}
+const costFunction = () => {
+  return 1000;
 }
 const solve = (start, end, F, C, H, D, U) => {
   let minCost = 999999;
   let minCostX = [];
+  let presentX = rand(F, C, [0, 1]);
   for (let i = start; i < end; i++) {
-    let presentX = getX(i, F, C);
+    presentX = fixX(presentX, i, F, C);//getX(i, F, C);
     let is = true;
     // 强容量限制的设施选址问题需要检查解
     if (Mode) {

@@ -1,4 +1,5 @@
 const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
+const { F, C, H, D, U } = require('./data');
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
@@ -34,7 +35,7 @@ const costFunction = (x, H, D, U) => {
   return min;
 }
 // 期望目标函数
-const expectCostFunction = (x, H, D, U, K) => {
+const expectCostFunction = (x, H, D, U, K, mustX) => {
   let sum, min = 0;
   let minX = copyMatrix(x);
   for (let i = 0; i < x.length; i++) {
@@ -44,11 +45,11 @@ const expectCostFunction = (x, H, D, U, K) => {
       sum += xi[j];
       let sumK = 0;
       for (let indexI = 0; indexI < x.length; indexI++) {
-        if (sumArr(x[indexI]) > 0) {
+        if (sumArr(x[indexI]) > 0 && K[indexI][j] > (1 / x.length)) {
           sumK += K[indexI][j];
         }
       }
-      if (sumK) {
+      if (sumArr(x[i]) > 0 && K[i][j] > (1 / x.length)) {
         min += D[i][j] * K[i][j] / sumK;
         minX[i][j] = K[i][j] / sumK;
       }
@@ -173,6 +174,19 @@ const cda = (F, C, H, D, U) => {
         K[i][j] = competeSoft(i, j, x, y, H, D, U);
       }
     }
+    for (let i = 0; i < F; i++) {
+      for (let j = 0; j < C; j++) {
+        if (mustX[i][j]) {
+          for (let newI = 0; newI < F; newI++) {
+            if (!mustX[newI][j]) {
+              K[newI][j] = 0;
+            } else {
+              K[newI][j] = 1;
+            }
+          }
+        }
+      }
+    }
   }
   Mode ? newCompete() : newCompeteSoft();
   // console.log('K', K);
@@ -207,7 +221,7 @@ const cda = (F, C, H, D, U) => {
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 100;
+    const MaxLoopTimes = 1000;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes <= MaxLoopTimes) {
@@ -341,10 +355,11 @@ const cda = (F, C, H, D, U) => {
 
   // 期望
   Mode ? newCompete() : newCompeteSoft();
-  let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K);
+  let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K, mustX);
   // console.log('expectCostX', expectCostX);
   console.log('expectCost', expectCost);
 }
+cda(F, C, H, D, U);
 
 exports.Mode = Mode;
 exports.compete = compete;
