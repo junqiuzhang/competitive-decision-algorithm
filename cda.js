@@ -1,8 +1,10 @@
 const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
+const { F, C, H, D, U } = require('./data');
+
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
-const Mode = false;
+const Mode = true;
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (sumArr(x[i]) > 0) {
@@ -207,7 +209,7 @@ const cda = (F, C, H, D, U) => {
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 100;
+    const MaxLoopTimes = 1000;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes <= MaxLoopTimes) {
@@ -345,6 +347,8 @@ const cda = (F, C, H, D, U) => {
   // console.log('expectCostX', expectCostX);
   console.log('expectCost', expectCost);
 }
+
+cda(F, C, H, D, U);
 
 exports.Mode = Mode;
 exports.compete = compete;
