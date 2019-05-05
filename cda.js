@@ -45,11 +45,11 @@ const expectCostFunction = (x, H, D, U, K, mustX) => {
       sum += xi[j];
       let sumK = 0;
       for (let indexI = 0; indexI < x.length; indexI++) {
-        if (sumArr(x[indexI]) > 0 && K[indexI][j] > (1 / x.length)) {
+        if (sumArr(x[indexI]) > 0 && K[indexI][j] > (sumArr(column(K, j)) / x.length)) {
           sumK += K[indexI][j];
         }
       }
-      if (sumArr(x[i]) > 0 && K[i][j] > (1 / x.length)) {
+      if (sumArr(x[i]) > 0 && K[i][j] > (sumArr(column(K, j)) / x.length)) {
         min += D[i][j] * K[i][j] / sumK;
         minX[i][j] = K[i][j] / sumK;
       }
@@ -350,7 +350,7 @@ const cda = (F, C, H, D, U) => {
    * 第六步：输出结果
   */
   let cost = costFunction(x, H, D, U);
-  // console.log('x', x);
+  console.log('x', x);
   console.log('cost', cost);
 
   // 期望

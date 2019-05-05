@@ -1,7 +1,7 @@
 const { rand } = require('./function');
-const F = 100;
-const C = 100;
-const U = 50;
+const F = 10;
+const C = 15;
+const U = 2;
 const H = rand(1, F, [5, 20]);
 const D = rand(F, C, [5, 20]);
 // console.log(H);
