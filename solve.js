@@ -1,3 +1,6 @@
+const { rand } = require('./function');
+const { Mode, costFunction } = require('./cda');
+const { F, C, H, D, U } = require('./data');
 /**
  * 精确解
  */

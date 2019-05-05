@@ -1,5 +1,8 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const { F, C } = require('./data');
+const { cda } = require('./cda');
+const { solve } = require('./solve');
 
 if (cluster.isMaster) {
   let endTaskNum = 0
@@ -7,6 +10,7 @@ if (cluster.isMaster) {
   console.time('main')
   console.log(`[Master]# Master starts running. pid: ${process.pid}`)
 
+  cda();
   for (let i = 0; i < numCPUs; i++) {
     const worker = cluster.fork();
     worker.send(i);
