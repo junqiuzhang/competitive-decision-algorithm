@@ -1,4 +1,3 @@
-const Data = require('./data');
 const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
 /**
  * Mode: true--强容量限制， false--软容量限制
@@ -58,7 +57,7 @@ const expectCostFunction = (x, H, D, U, K) => {
   }
   return [min, minX];
 }
-const cda = () => {
+const cda = (F, C, H, D, U) => {
 
   /** 参数 
    * F设施数
@@ -68,11 +67,6 @@ const cda = () => {
    * D服务费用矩阵
   */
 
-  const F = Data.F;
-  const C = Data.C;
-  const U = Data.U;
-  const H = Data.H;
-  const D = Data.D;
 
   // const F = 4;
   // const C = 5;
@@ -350,7 +344,10 @@ const cda = () => {
   let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K);
   // console.log('expectCostX', expectCostX);
   console.log('expectCost', expectCost);
+  console.log('solve', H)
+
 }
+
 exports.Mode = Mode;
 exports.compete = compete;
 exports.competeSoft = competeSoft;

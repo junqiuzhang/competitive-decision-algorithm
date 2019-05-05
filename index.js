@@ -1,6 +1,6 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-const { F, C } = require('./data');
+const { F, C, H, D, U } = require('./data');
 const { cda } = require('./cda');
 const { solve } = require('./solve');
 
@@ -10,7 +10,7 @@ if (cluster.isMaster) {
   console.time('main')
   console.log(`[Master]# Master starts running. pid: ${process.pid}`)
 
-  cda();
+  cda(F, C, H, D, U);
   for (let i = 0; i < numCPUs; i++) {
     const worker = cluster.fork();
     worker.send(i);
@@ -33,7 +33,8 @@ if (cluster.isMaster) {
     const MaxLoopNumber = Math.pow(F, C);
     const startNum = Math.floor(MaxLoopNumber / numCPUs) * seq;
     const endNum = Math.floor(MaxLoopNumber / numCPUs) * (seq + 1) + 1;
-    const result = solve(startNum, endNum)
+    const result = solve(startNum, endNum, F, C, H, D, U)
+    
     console.log(`[Worker]# The result of task ${process.pid} is ${result}, taking ${Date.now() - start} ms.`)
     process.send('My task has ended.')
   })
