@@ -40,7 +40,6 @@ const check = (x) => {
   return che;
 }
 const solve = (start, end, F, C, H, D, U) => {
-  console.log('solve', H)
   let minCost = 999999;
   let minCostX = [];
   for (let i = start; i < end; i++) {

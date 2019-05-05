@@ -344,8 +344,6 @@ const cda = (F, C, H, D, U) => {
   let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K);
   // console.log('expectCostX', expectCostX);
   console.log('expectCost', expectCost);
-  console.log('solve', H)
-
 }
 
 exports.Mode = Mode;
