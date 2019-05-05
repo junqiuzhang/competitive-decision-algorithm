@@ -1,120 +1,10 @@
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
+const Data = require('./data');
+const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
 const Mode = false;
-// 随机矩阵
-const rand = (x, y, scope) => {
-  if (!scope || !scope.length || scope[0] > scope[1]) {
-    console.log('Error: 未输入取值范围或取值范围错误');
-    return null;
-  }
-  // 随机数组
-  const randArray = (x, scope) => {
-    // 随机数
-    const randNumber = (scope) => {
-      return Math.floor(Math.random() * (scope[1] - scope[0]) + scope[0]);
-    }
-    // 1 x 1数组
-    if (x === 1) {
-      return randNumber(scope);
-    }
-    // 1 x n数组
-    let randArray = [];
-    for (let i = 0; i < x; i++) {
-      randArray.push(randNumber(scope));
-    }
-    return randArray;
-  }
-  // 1 x n矩阵
-  if (x === 1) {
-    return randArray(y, scope);
-  }
-  if (y === 1) {
-    return randArray(x, scope);
-  }
-  // n x n矩阵
-  let randMatrix = [];
-  for (let i = 0; i < x; i++) {
-    randMatrix.push(randArray(y, scope));
-  }
-  return randMatrix;
-}
-// 复制矩阵
-const copyMatrix = (x) => {
-  const copyArray = (x) => {
-    let yArray = [];
-    for (let j = 0; j < x.length; j++) {
-      yArray.push(x[j]);
-    }
-    return yArray;
-  }
-  // 1 x n矩阵
-  if (typeof x[0] === 'number') {
-    return copyArray(x);
-  }
-  // n x n矩阵
-  let y = [];
-  for (let i = 0; i < x.length; i++) {
-    y.push(copyArray(x[i]));
-  }
-  return y;
-}
-const bigger = (x, y) => {
-  if (x.length !== y.length) {
-    console.log('Error: 数组长度不相同');
-    return null;
-  }
-  for (let i = 0; i < x.length; i++) {
-    if (x[i] < y[i]) {
-      return false;
-      break;
-    }
-  }
-  return true;
-}
-const smaller = (x, y) => {
-  if (x.length !== y.length) {
-    console.log('Error: 数组长度不相同');
-    return null;
-  }
-  for (let i = 0; i < x.length; i++) {
-    if (x[i] > y[i]) {
-      return false;
-      break;
-    }
-  }
-  return true;
-}
-// 获取矩阵的一列
-const column = (matrix, index) => {
-  if (matrix.length === 0 || matrix[0].length === 0) {
-    console.log('Error: 矩阵长度为0');
-    return null;
-  }
-  if (matrix[0].length < index + 1) {
-    console.log('Error: 索引超出矩阵长度');
-    return null;
-  }
-  let column = [];
-  for (let i = 0; i < matrix.length; i++) {
-    column.push(matrix[i][index]);
-  }
-  return column;
-}
-// 数组求和
-const sumArr = (arr) => {
-  if (!arr || !arr.length) {
-    console.log('Error:参数应为数组');
-    return null;
-  }
-  let sum = 0;
-  for (let i = 0; i < arr.length; i++) {
-    sum += arr[i];
-  }
-  return sum;
-}
+
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (sumArr(x[i]) > 0) {
@@ -177,11 +67,11 @@ const expectCostFunction = (x, H, D, U) => {
  * D服务费用矩阵
 */
 
-const F = 10;
-const C = 10;
-const U = 3;
-const H = rand(1, F, [5, 20]);
-const D = rand(F, C, [5, 20]);
+const F = Data.F;
+const C = Data.C;
+const U = Data.U;
+const H = Data.H;
+const D = Data.D;
 
 // const F = 4;
 // const C = 5;
@@ -294,32 +184,35 @@ Mode ? newCompete() : newCompeteSoft();
 /** 
  * 第三步：分配顾客
 */
-for (let j = 0; j < C; j++) {
-  const ConstKCol = column(K, j);
-  let KCol = column(K, j);
-  KCol.sort();
-  for (let index = 0; index < F; index++) {
-    // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
-    let mustXCol = column(mustX, j);
-    if (sumArr(mustXCol) > 0) {
-      continue;
-    }
-    let maxNum = KCol[KCol.length - 1 - index];
-    let maxIndex = ConstKCol.indexOf(maxNum);
-    if (sumArr(x[maxIndex]) < U) {
-      x[maxIndex][j] = 1;
-      y[maxIndex] = 1;
-      break;
+const FacilityDistributeCustom = () => {
+  for (let j = 0; j < C; j++) {
+    const ConstKCol = column(K, j);
+    let KCol = column(K, j);
+    KCol.sort();
+    for (let index = 0; index < F; index++) {
+      // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
+      let mustXCol = column(mustX, j);
+      if (sumArr(mustXCol) > 0) {
+        continue;
+      }
+      let maxNum = KCol[KCol.length - 1 - index];
+      let maxIndex = ConstKCol.indexOf(maxNum);
+      if (sumArr(x[maxIndex]) < U) {
+        x[maxIndex][j] = 1;
+        y[maxIndex] = 1;
+        break;
+      }
     }
   }
 }
+FacilityDistributeCustom();
 Mode ? newCompete() : newCompeteSoft();
 // console.log('x', x);
 /** 
  * 第四步：争夺顾客
 */
 const FacilityCompeteCustom = (x, y) => {
-  const MaxLoopTimes = 1;
+  const MaxLoopTimes = 100;
   let loopTimes = 0;
   let cost = costFunction(x, H, D, U);
   while (loopTimes <= MaxLoopTimes) {
@@ -408,13 +301,14 @@ FacilityCompeteCustom(x, y);
 /** 
  * 第五步：资源交换
 */
-const MaxExchangeTimes = 1;
-let exchangeTimes = 0;
+
 
 Mode ? newCompete() : newCompeteSoft();
-let cost = costFunction(x, H, D, U);
 
 const FacilityExchangeCustom = () => {
+  const MaxExchangeTimes = 100;
+  let exchangeTimes = 0;
+  let cost = costFunction(x, H, D, U);
   while (exchangeTimes < MaxExchangeTimes) {
     let newX = copyMatrix(x);
     let newY = copyMatrix(y);
@@ -446,7 +340,7 @@ FacilityExchangeCustom();
 /** 
  * 第六步：输出结果
 */
-cost = costFunction(x, H, D, U);
+let cost = costFunction(x, H, D, U);
 // console.log('x', x);
 console.log('cost', cost);
 
@@ -455,98 +349,4 @@ Mode ? newCompete() : newCompeteSoft();
 let [expectCost, expectCostX] = expectCostFunction(x, H, D, U);
 // console.log('expectCostX', expectCostX);
 console.log('expectCost', expectCost);
-
-/**
- * 精确解
- */
-const getX = (num, F, C) => {
-  let arrX = [];
-  let n = num;
-  while (Math.floor(n / F) > 0) {
-    arrX.push(n % F);
-    n = Math.floor(n / F);
-  }
-  arrX.push(n % F);
-  if (C - arrX.length > 1) {
-    let arrXFirst = rand(1, C - arrX.length, [0, 1]);
-    arrX = arrX.concat(arrXFirst);
-  } else if (C - arrX.length === 1) {
-    arrX = arrX.concat([0]);
-  }
-  arrX.reverse();
-  let x = rand(F, C, [0, 1]);
-  for (let j = 0; j < arrX.length; j++) {
-    x[arrX[j]][j] = 1;
-  }
-  return x;
-}
-const check = (x) => {
-  let che = true;
-  let sum;
-  for(let i = 0; i < x.length; i++){
-    xi = x[i];
-    sum = 0;
-    for(let j = 0; j < xi.length; j++){
-      sum += xi[j];
-    }
-    if(sum > U || sum < 0){
-      che = false;
-    }
-  }
-  return che;
-}
-const solve = (start, end) => {
-  let minCost = 999999;
-  let minCostX = [];
-  for (let i = start; i < end; i++) {
-    let presentX = getX(i, F, C);
-    let is = true;
-    // 强容量限制的设施选址问题需要检查解
-    if (Mode) {
-      is = check(presentX);
-    }
-    if (is) {
-      let presentCost = costFunction(presentX, H, D, U);
-      if (presentCost < minCost) {
-        minCost = presentCost;
-        minCostX = presentX;
-        // console.log(minCostX, minCost);
-      }
-    }
-  }
-  return minCost;
-}
-
-if (cluster.isMaster) {
-  const seqArr = [44, 42, 43, 44]
-  let endTaskNum = 0
-
-  console.time('main')
-  console.log(`[Master]# Master starts running. pid: ${process.pid}`)
-
-  for (let i = 0; i < numCPUs; i++) {
-    const worker = cluster.fork();
-    worker.send(i);
-  }
-  cluster.on('message', (worker, message) => {
-    console.log(`[Master]# Worker ${worker.id}: ${message}`)
-    endTaskNum++
-    if (endTaskNum === 4) {
-      console.timeEnd('main')
-      cluster.disconnect()
-    }
-  })
-  cluster.on('exit', (worker, code, signal) => console.log(`[Master]# Worker ${worker.id} died.`))
-} else {
-  process.on('message', seq => {
-    console.log(`[Worker]# starts calculating...`)
-    const start = Date.now()
-    const MaxLoopNumber = Math.pow(F, C);
-    const startNum = Math.floor(MaxLoopNumber / numCPUs) * seq;
-    const endNum = Math.floor(MaxLoopNumber / numCPUs) * (seq + 1) + 1;
-    const result = solve(startNum, endNum)
-    console.log(`[Worker]# The result of task ${process.pid} is ${result}, taking ${Date.now() - start} ms.`)
-    process.send('My task has ended.')
-  })
-}
 
