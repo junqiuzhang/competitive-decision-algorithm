@@ -209,7 +209,7 @@ const cda = (F, C, H, D, U) => {
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 1000;
+    const MaxLoopTimes = 5;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes <= MaxLoopTimes) {
@@ -303,7 +303,7 @@ const cda = (F, C, H, D, U) => {
   Mode ? newCompete() : newCompeteSoft();
 
   const FacilityExchangeCustom = () => {
-    const MaxExchangeTimes = 100;
+    const MaxExchangeTimes = 0;
     let exchangeTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (exchangeTimes < MaxExchangeTimes) {
