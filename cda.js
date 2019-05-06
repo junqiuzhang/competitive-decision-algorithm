@@ -209,7 +209,7 @@ const cda = (F, C, H, D, U) => {
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 5;
+    const MaxLoopTimes = 3;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes <= MaxLoopTimes) {
