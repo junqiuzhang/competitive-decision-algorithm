@@ -35,9 +35,9 @@ const costFunction = (x, H, D, U) => {
   return min;
 }
 // 期望目标函数
-const expectCostFunction = (x, H, D, U, K, mustX) => {
+const expectCostFunction = (x, H, D, U, K) => {
   let sum, min = 0;
-  let minX = copyMatrix(x);
+  let minX = rand(x.length, x[0].length, [0, 1]);
   for (let i = 0; i < x.length; i++) {
     xi = x[i];
     sum = 0;
@@ -80,16 +80,6 @@ const cda = (F, C, H, D, U) => {
   //   [15, 10, 8, 6, 3]
   // ];
 
-  // const F = 4;
-  // const C = 5;
-  // const U = 2;
-  // const H = [8, 7, 6, 19];
-  // const D = [
-  //   [14, 8, 11, 10, 10],
-  //   [16, 16, 13, 14, 17],
-  //   [11, 5, 5, 7, 11],
-  //   [17, 6, 13, 19, 16]
-  // ];
   console.log('H, D', H, D)
   /**
    * cda算法
@@ -216,15 +206,15 @@ const cda = (F, C, H, D, U) => {
   }
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
-  // console.log('x', x);
+  console.log('distribute', x);
   /** 
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 3;
+    const MaxLoopTimes = 7;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
-    while (loopTimes <= MaxLoopTimes) {
+    while (loopTimes < MaxLoopTimes) {
       let j = 0;
       for (j = 0; j < C; j++) {
         // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
@@ -272,6 +262,7 @@ const cda = (F, C, H, D, U) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
+              console.log('compete', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -290,6 +281,7 @@ const cda = (F, C, H, D, U) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
+              console.log('compete', x);
               break;
             }
           }
@@ -300,13 +292,14 @@ const cda = (F, C, H, D, U) => {
         }
       }
       if (j === C) {
+        console.log('balance');
         break;
       }
       loopTimes++;
     }
   }
   FacilityCompeteCustom(x, y);
-  // console.log('x', x);
+  console.log('competed', x);
   /** 
    * 第五步：资源交换
   */
@@ -359,7 +352,6 @@ const cda = (F, C, H, D, U) => {
   // console.log('expectCostX', expectCostX);
   console.log('expectCost', expectCost);
 }
-cda(F, C, H, D, U);
 
 cda(F, C, H, D, U);
 
