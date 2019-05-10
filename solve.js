@@ -1,6 +1,6 @@
 const { rand } = require('./function');
-const { Mode, costFunction } = require('./cda');
-const { F, C, H, D, U } = require('./data');
+const { costFunction, expectCostFunction } = require('./cda');
+const { Mode, F, C, H, D, U } = require('./data');
 
 /**
  * 精确解
@@ -47,6 +47,7 @@ const fixX = (x, num, F, C) => {
   }
   return x;
 }
+// 检查x是否合法
 const check = (x) => {
   let sum;
   for(let i = 0; i < x.length; i++){
@@ -90,6 +91,7 @@ solve(0, MaxLoopNumber, F, C, H, D, U);
 
 module.exports = {
   getX,
+  fixX,
   check,
   solve,
 }

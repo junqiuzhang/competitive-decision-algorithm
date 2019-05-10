@@ -4,7 +4,7 @@ const { cda } = require('./cda');
 const allTimes = 1000;
 let betterTimes = 0;
 for (let i = 0; i < allTimes; i++) {
-  const { F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = dataFunction();
+  const { Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = dataFunction();
   const better = cda(F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
   if (better) {
     betterTimes++;

@@ -55,6 +55,22 @@ const copyMatrix = (x) => {
   }
   return y;
 }
+// 获取矩阵的一列
+const columnMatrix = (matrix, index) => {
+  if (matrix.length === 0 || matrix[0].length === 0) {
+    console.log('Error: 矩阵长度为0');
+    return null;
+  }
+  if (matrix[0].length < index + 1) {
+    console.log('Error: 索引超出矩阵长度');
+    return null;
+  }
+  let columnMatrix = [];
+  for (let i = 0; i < matrix.length; i++) {
+    columnMatrix.push(matrix[i][index]);
+  }
+  return columnMatrix;
+}
 const bigger = (x, y) => {
   if (x.length !== y.length) {
     console.log('Error: 数组长度不相同');
@@ -81,22 +97,6 @@ const smaller = (x, y) => {
   }
   return true;
 }
-// 获取矩阵的一列
-const column = (matrix, index) => {
-  if (matrix.length === 0 || matrix[0].length === 0) {
-    console.log('Error: 矩阵长度为0');
-    return null;
-  }
-  if (matrix[0].length < index + 1) {
-    console.log('Error: 索引超出矩阵长度');
-    return null;
-  }
-  let column = [];
-  for (let i = 0; i < matrix.length; i++) {
-    column.push(matrix[i][index]);
-  }
-  return column;
-}
 // 数组求和
 const sumArr = (arr) => {
   if (!arr || !arr.length) {
@@ -112,9 +112,9 @@ const sumArr = (arr) => {
 module.exports = {
   rand,
   copyMatrix,
+  columnMatrix,
   bigger,
   smaller,
-  column,
   sumArr,
 }
 

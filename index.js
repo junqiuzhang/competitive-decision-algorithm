@@ -1,6 +1,6 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-const { F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
+const { Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
 const { cda } = require('./cda');
 const { solve } = require('./solve');
 
@@ -9,7 +9,7 @@ if (cluster.isMaster) {
 
   console.time('main')
 
-  cda(F, C, H, D, U);
+  cda(Mode, F, C, H, D, U);
   for (let i = 0; i < numCPUs; i++) {
     const worker = cluster.fork();
     worker.send(i);

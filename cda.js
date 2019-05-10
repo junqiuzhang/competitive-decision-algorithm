@@ -1,10 +1,5 @@
-const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
-const { F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
-
-/**
- * Mode: true--强容量限制， false--软容量限制
- */
-const Mode = false;
+const { rand, copyMatrix, bigger, smaller, columnMatrix, sumArr } = require('./function');
+const { Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
 
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
@@ -48,11 +43,11 @@ const expectCostFunction = (x, H, D, U, K) => {
     for (let j = 0; j < x[i].length; j++) {
       let sumK = 0;
       for (let indexI = 0; indexI < x.length; indexI++) {
-        if (sumArr(x[indexI]) > 0 && K[indexI][j] > (sumArr(column(K, j)) / x.length)) {
+        if (sumArr(x[indexI]) > 0 && K[indexI][j] > (sumArr(columnMatrix(K, j)) / x.length)) {
           sumK += K[indexI][j];
         }
       }
-      if (sumArr(x[i]) > 0 && K[i][j] > (sumArr(column(K, j)) / x.length)) {
+      if (sumArr(x[i]) > 0 && K[i][j] > (sumArr(columnMatrix(K, j)) / x.length)) {
         // min += D[i][j] * K[i][j] / sumK;
         // minX[i][j] = K[i][j] / sumK;
         min += D[i][j] * (+((K[i][j] / sumK).toFixed(4)));
@@ -65,7 +60,7 @@ const expectCostFunction = (x, H, D, U, K) => {
   }
   return [min, minX];
 }
-const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
+const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
 
   /** 参数 
    * F设施数
@@ -75,22 +70,26 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
    * D服务费用矩阵
   */
 
-  console.log('H, D', H, D);
+  console.log('H', H);
+  console.log('D', D);
+  console.log('U', U);
 
   /**
    * cda算法
   */
 
-  // 初始化
+  /**
+   * 第零步：初始化
+  */
   let mustX = rand(F, C, [0, 1]);
   let mustY = rand(1, F, [0, 1]);
   let x = rand(F, C, [0, 1]);
   let y = rand(1, F, [0, 1]);
-  // console.log('x, y', x, y);
 
   /** 
    * 第一步：根据性质降阶
   */
+  console.log('第一步：根据性质降阶');
 
   // 性质2
   let minIndex = H.indexOf(Math.min(...H));
@@ -107,7 +106,6 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       mustY[minIndex] = 1;
     }
   }
-  // console.log('mustX, mustY', mustX, mustY);
 
   // 性质3
   for (let i = 0; i < F; i++) {
@@ -119,11 +117,11 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       }
     }
   }
-  // console.log('mustX, mustY', mustX, mustY);
 
   /** 
    * 第二步：计算竞争力函数矩阵
   */
+  console.log('第二步：计算竞争力函数矩阵');
 
   x = copyMatrix(mustX);
   y = copyMatrix(mustY);
@@ -178,20 +176,21 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
     }
   }
   Mode ? newCompete() : newCompeteSoft();
-  console.log('竞争力矩阵', K);
+  console.log(K);
 
   /** 
    * 第三步：分配顾客
   */
+  console.log('第三步：分配顾客');
 
   const FacilityDistributeCustom = () => {
     for (let j = 0; j < C; j++) {
-      const ConstKCol = column(K, j);
-      let KCol = column(K, j);
+      const ConstKCol = columnMatrix(K, j);
+      let KCol = columnMatrix(K, j);
       KCol.sort();
       for (let index = 0; index < F; index++) {
         // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
-        let mustXCol = column(mustX, j);
+        let mustXCol = columnMatrix(mustX, j);
         if (sumArr(mustXCol) > 0) {
           continue;
         }
@@ -207,11 +206,12 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   }
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
-  console.log('分配顾客结果', x);
+  console.log(x);
 
   /** 
    * 第四步：争夺顾客
   */
+  console.log('第四步：争夺顾客');
 
   const FacilityCompeteCustom = (x, y) => {
     let loopTimes = 0;
@@ -220,12 +220,12 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       let j = 0;
       for (j = 0; j < C; j++) {
         // 如果根据数学性质当前顾客已有设施服务，则跳过顾客
-        let mustXCol = column(mustX, j);
+        let mustXCol = columnMatrix(mustX, j);
         if (sumArr(mustXCol) > 0) {
           continue;
         }
         // 当前服务顾客的设施
-        let xCol = column(x, j);
+        let xCol = columnMatrix(x, j);
         let serverF = xCol.indexOf(1);
         if (serverF < 0) {
           continue;
@@ -241,11 +241,11 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
          * 争夺顾客  
         */
 
-        console.log('对顾客', j);
-        console.log('竞争力矩阵', K);
+        console.log('当前顾客', j + 1);
+        console.log('当前竞争力函数矩阵', K);
 
         // 竞争力最大的设施
-        let KCol = column(K, j);
+        let KCol = columnMatrix(K, j);
         let maxIndex = KCol.indexOf(Math.max(...KCol));
         // 如果竞争力最大的设施没有服务顾客
         if (serverF !== maxIndex) {
@@ -272,7 +272,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('重新分配顾客', x);
+              console.log('重新分配', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -291,7 +291,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('重新分配顾客', x);
+              console.log('重新分配', x);
               break;
             }
           }
@@ -309,11 +309,12 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
     }
   }
   FacilityCompeteCustom(x, y);
-  console.log('争夺顾客结果', x);
+  console.log(x);
 
   /** 
    * 第五步：资源交换
   */
+  console.log('第五步：资源交换');
 
   Mode ? newCompete() : newCompeteSoft();
 
@@ -326,8 +327,8 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       let first = rand(1, 1, [0, C]);
       let second = rand(1, 1, [0, C]);
       if (first !== second) {
-        let firstCol = column(newX, first);
-        let secondCol = column(newX, first);
+        let firstCol = columnMatrix(newX, first);
+        let secondCol = columnMatrix(newX, first);
         let firstIndex = firstCol.indexOf(1);
         let secondIndex = secondCol.indexOf(1);
         if (firstIndex !== secondIndex) {
@@ -366,7 +367,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   return expectCost <= cost;
 }
 
-cda(F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
+cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
 
 module.exports = {
   Mode,
