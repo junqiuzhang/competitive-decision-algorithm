@@ -1,5 +1,5 @@
 const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
-const { F, C, H, D, U } = require('./data');
+const { F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
 
 /**
  * Mode: true--强容量限制， false--软容量限制
@@ -220,7 +220,6 @@ const cda = (F, C, H, D, U) => {
   */
 
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 3;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes < MaxLoopTimes) {
@@ -317,7 +316,6 @@ const cda = (F, C, H, D, U) => {
   Mode ? newCompete() : newCompeteSoft();
 
   const FacilityExchangeCustom = () => {
-    const MaxExchangeTimes = 0;
     let exchangeTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (exchangeTimes < MaxExchangeTimes) {

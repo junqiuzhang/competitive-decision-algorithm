@@ -4,6 +4,8 @@ const C = 5;
 const U = 2;
 let H = rand(1, F, [10, 20]);
 let D = rand(F, C, [5, 20]);
+const MaxLoopTimes = 1;
+const MaxExchangeTimes = 0;
 
 // HCFLP 迭代3次达到均衡
 // H = [ 18, 11, 11, 12, 14 ];
@@ -40,4 +42,6 @@ module.exports = {
   U,
   H,
   D,
+  MaxLoopTimes,
+  MaxExchangeTimes
 }
