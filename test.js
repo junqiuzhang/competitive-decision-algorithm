@@ -5,7 +5,7 @@ const allTimes = 1000;
 let betterTimes = 0;
 for (let i = 0; i < allTimes; i++) {
   const { Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = dataFunction();
-  const better = cda(F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
+  const better = cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
   if (better) {
     betterTimes++;
   }
