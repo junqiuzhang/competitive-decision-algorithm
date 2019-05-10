@@ -109,10 +109,12 @@ const sumArr = (arr) => {
   }
   return sum;
 }
-exports.rand = rand;
-exports.copyMatrix = copyMatrix;
-exports.bigger = bigger;
-exports.smaller = smaller;
-exports.column = column;
-exports.sumArr = sumArr;
+module.exports = {
+  rand,
+  copyMatrix,
+  bigger,
+  smaller,
+  column,
+  sumArr,
+}
 

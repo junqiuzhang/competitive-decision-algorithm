@@ -3,7 +3,7 @@ const { F, C, H, D, U } = require('./data');
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
-const Mode = true;
+const Mode = false;
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (sumArr(x[i]) > 0) {
@@ -206,12 +206,12 @@ const cda = (F, C, H, D, U) => {
   }
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
-  console.log('distribute', x);
+  console.log('分配顾客结果', x);
   /** 
    * 第四步：争夺顾客
   */
   const FacilityCompeteCustom = (x, y) => {
-    const MaxLoopTimes = 7;
+    const MaxLoopTimes = 3;
     let loopTimes = 0;
     let cost = costFunction(x, H, D, U);
     while (loopTimes < MaxLoopTimes) {
@@ -281,7 +281,7 @@ const cda = (F, C, H, D, U) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('compete', x);
+              console.log('争夺顾客', x);
               break;
             }
           }
@@ -292,14 +292,14 @@ const cda = (F, C, H, D, U) => {
         }
       }
       if (j === C) {
-        console.log('balance');
+        console.log('竞争决策均衡');
         break;
       }
       loopTimes++;
     }
   }
   FacilityCompeteCustom(x, y);
-  console.log('competed', x);
+  console.log('争夺顾客结果', x);
   /** 
    * 第五步：资源交换
   */
@@ -343,7 +343,7 @@ const cda = (F, C, H, D, U) => {
    * 第六步：输出结果
   */
   let cost = costFunction(x, H, D, U);
-  console.log('x', x);
+  // console.log('x', x);
   console.log('cost', cost);
 
   // 期望
@@ -355,9 +355,11 @@ const cda = (F, C, H, D, U) => {
 
 cda(F, C, H, D, U);
 
-exports.Mode = Mode;
-exports.compete = compete;
-exports.competeSoft = competeSoft;
-exports.costFunction = costFunction;
-exports.expectCostFunction = expectCostFunction;
-exports.cda = cda;
+module.exports = {
+  Mode,
+  compete,
+  competeSoft,
+  costFunction,
+  expectCostFunction,
+  cda,
+}

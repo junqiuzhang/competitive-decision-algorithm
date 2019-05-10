@@ -85,6 +85,8 @@ const solve = (start, end, F, C, H, D, U) => {
   }
   return minCost;
 }
-exports.getX = getX;
-exports.check = check;
-exports.solve = solve;
+module.exports = {
+  getX,
+  check,
+  solve,
+}
