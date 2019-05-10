@@ -6,7 +6,19 @@ let H = rand(1, F, [10, 20]);
 let D = rand(F, C, [5, 20]);
 const MaxLoopTimes = 1;
 const MaxExchangeTimes = 0;
-
+const dataFunction = () => {
+  let H = rand(1, F, [10, 20]);
+  let D = rand(F, C, [5, 20]);
+  return {
+    F,
+    C,
+    U,
+    H,
+    D,
+    MaxLoopTimes,
+    MaxExchangeTimes,
+  };
+}
 // HCFLP 迭代3次达到均衡
 // H = [ 18, 11, 11, 12, 14 ];
 // D = [ [ 13, 7, 15, 16, 17 ],
@@ -29,19 +41,19 @@ const MaxExchangeTimes = 0;
 //   [ 12, 17, 15, 14, 19 ],
 //   [ 19, 15, 17, 18, 14 ] ];
 // SCFLP 迭代2次达到均衡
-H = [ 18, 11, 13, 12, 16 ];
-D = [ [ 14, 17, 13, 18, 19 ],
-  [ 13, 8, 7, 9, 8 ],
-  [ 11, 7, 10, 7, 8 ],
-  [ 6, 11, 17, 18, 14 ],
-  [ 9, 6, 7, 15, 15 ] ];
+// H = [ 18, 11, 13, 12, 16 ];
+// D = [ [ 14, 17, 13, 18, 19 ],
+//   [ 13, 8, 7, 9, 8 ],
+//   [ 11, 7, 10, 7, 8 ],
+//   [ 6, 11, 17, 18, 14 ],
+//   [ 9, 6, 7, 15, 15 ] ];
 // SCFLP 迭代2次达到均衡
 // H = [ 13, 17, 10, 18, 10 ];
 // D = [ [ 13, 19, 15, 19, 14 ],
 //   [ 8, 5, 6, 8, 14 ],
 //   [ 11, 7, 16, 5, 17 ],
 //   [ 15, 7, 5, 12, 13 ],
-//   [ 12, 7, 8, 13, 15 ] ]
+//   [ 12, 7, 8, 13, 15 ] ];
 module.exports = {
   F,
   C,
@@ -49,5 +61,6 @@ module.exports = {
   H,
   D,
   MaxLoopTimes,
-  MaxExchangeTimes
+  MaxExchangeTimes,
+  dataFunction,
 }

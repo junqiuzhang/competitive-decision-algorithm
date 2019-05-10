@@ -1,6 +1,6 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-const { F, C, H, D, U } = require('./data');
+const { F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes } = require('./data');
 const { cda } = require('./cda');
 const { solve } = require('./solve');
 
