@@ -48,7 +48,7 @@ const fixX = (x, num, F, C) => {
   return x;
 }
 // 检查x是否合法
-const check = (x) => {
+const check = (x, U) => {
   let sum;
   for(let i = 0; i < x.length; i++){
     xi = x[i];
@@ -63,7 +63,7 @@ const check = (x) => {
   return true;
 }
 
-const solve = (start, end, F, C, H, D, U) => {
+const solve = (start, end, Mode, F, C, H, D, U, costFunction) => {
   let minCost = 999999;
   let minCostX = [];
   let presentX = rand(F, C, [0, 1]);
@@ -72,7 +72,7 @@ const solve = (start, end, F, C, H, D, U) => {
     let is = true;
     // 强容量限制的设施选址问题需要检查解
     if (Mode) {
-      is = check(presentX);
+      is = check(presentX, U);
     }
     if (is) {
       let presentCost = costFunction(presentX, H, D, U);
@@ -86,8 +86,8 @@ const solve = (start, end, F, C, H, D, U) => {
   return minCost;
 }
 
-const MaxLoopNumber = Math.pow(F, C);
-solve(0, MaxLoopNumber, F, C, H, D, U);
+// const MaxLoopNumber = Math.pow(F, C);
+// solve(0, MaxLoopNumber, Mode, F, C, H, D, U);
 
 module.exports = {
   getX,

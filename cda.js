@@ -367,10 +367,9 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   return expectCost <= cost;
 }
 
-cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
+// cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
 
 module.exports = {
-  Mode,
   compete,
   competeSoft,
   costFunction,
