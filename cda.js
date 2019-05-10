@@ -9,16 +9,20 @@ const Mode = false;
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (sumArr(x[i]) > 0) {
-    return 1 / D[i][j];
+    // return 1 / D[i][j];
+    return +((1 / D[i][j]).toFixed(4));
   }
-  return 1 / (H[i] + D[i][j]);
+  // return 1 / (H[i] + D[i][j]);
+  return +((1 / (H[i] + D[i][j])).toFixed(4));
 }
 // 竞争力函数
 const competeSoft = (i, j, x, y, H, D, U) => {
   if (sumArr(x[i]) % U > 0) {
-    return 1 / D[i][j];
+    // return 1 / D[i][j];
+    return +((1 / D[i][j]).toFixed(4));
   }
-  return 1 / (H[i] + D[i][j]);
+  // return 1 / (H[i] + D[i][j]);
+  return +((1 / (H[i] + D[i][j])).toFixed(4));
 }
 // 目标函数
 const costFunction = (x, H, D, U) => {
@@ -53,7 +57,8 @@ const expectCostFunction = (x, H, D, U, K) => {
       }
       if (sumArr(x[i]) > 0 && K[i][j] > (sumArr(column(K, j)) / x.length)) {
         min += D[i][j] * K[i][j] / sumK;
-        minX[i][j] = K[i][j] / sumK;
+        // minX[i][j] = K[i][j] / sumK;
+        minX[i][j] = +((K[i][j] / sumK).toFixed(4));
       }
     }
     min = min + H[i] * Math.ceil(sum / U);
@@ -184,7 +189,7 @@ const cda = (F, C, H, D, U) => {
     }
   }
   Mode ? newCompete() : newCompeteSoft();
-  // console.log('K', K);
+  console.log('竞争力矩阵', K);
 
   /** 
    * 第三步：分配顾客
@@ -239,9 +244,14 @@ const cda = (F, C, H, D, U) => {
           y[serverF] = 0;
         }
         Mode ? newCompete() : newCompeteSoft();
+        
         /**
          * 争夺顾客  
         */
+
+        console.log('对顾客', j);
+        console.log('竞争力矩阵', K);
+
         // 竞争力最大的设施
         let KCol = column(K, j);
         let maxIndex = KCol.indexOf(Math.max(...KCol));
@@ -270,7 +280,7 @@ const cda = (F, C, H, D, U) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('争夺顾客', x);
+              console.log('重新分配顾客', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -352,14 +362,14 @@ const cda = (F, C, H, D, U) => {
   */
 
   let cost = costFunction(x, H, D, U);
-  // console.log('x', x);
-  console.log('cost', cost);
+  console.log('纯策略解', x);
+  console.log('总费用函数', cost);
 
   // 期望
   Mode ? newCompete() : newCompeteSoft();
   let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K, mustX);
-  // console.log('expectCostX', expectCostX);
-  console.log('expectCost', expectCost);
+  console.log('混合策略解', expectCostX);
+  console.log('总费用函数', expectCost);
 }
 
 cda(F, C, H, D, U);

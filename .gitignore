@@ -2,8 +2,7 @@
 *.docx
 *.pdf
 /node_modules/
-temp*.js
-*.txt
+tempCodeRunnerFile.js
 # some local files
 */.settings/
 */.DS_Store
