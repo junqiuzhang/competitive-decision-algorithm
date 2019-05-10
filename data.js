@@ -3,10 +3,10 @@ const { rand } = require('./function');
  * Mode: true--强容量限制， false--软容量限制
  */
 const Mode = false;
-const F = 5;
+const F = 4;
 const C = 5;
 const U = 2;
-const MaxLoopTimes = 2;
+const MaxLoopTimes = 3;
 const MaxExchangeTimes = 0;
 let H = rand(1, F, [5, 15]);
 let D = rand(F, C, [5, 10]);
@@ -75,11 +75,11 @@ const dataFunction = () => {
 //   [ 5, 16, 16, 13, 15 ],
 //   [ 18, 8, 9, 18, 19 ] ];
 // SCFLP 迭代2次达到均衡
-// H = [ 8, 9, 9, 11 ];
-// D = [ [ 8, 7, 9, 9, 8 ],
-//   [ 9, 7, 9, 9, 6 ],
-//   [ 7, 8, 7, 9, 8 ],
-//   [ 6, 8, 9, 5, 8 ] ]
+H = [ 8, 9, 9, 11 ];
+D = [ [ 8, 7, 9, 9, 8 ],
+  [ 9, 7, 9, 9, 6 ],
+  [ 7, 8, 7, 9, 8 ],
+  [ 6, 8, 9, 5, 8 ] ]
 module.exports = {
   Mode, 
   F,
