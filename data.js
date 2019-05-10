@@ -1,11 +1,11 @@
 const { rand } = require('./function');
-const F = 5;
+const F = 4;
 const C = 5;
 const U = 2;
-const MaxLoopTimes = 1;
+const MaxLoopTimes = 2;
 const MaxExchangeTimes = 0;
-let H = rand(1, F, [10, 20]);
-let D = rand(F, C, [5, 20]);
+let H = rand(1, F, [5, 15]);
+let D = rand(F, C, [5, 10]);
 const dataFunction = () => {
   let H = rand(1, F, [10, 20]);
   let D = rand(F, C, [5, 20]);
@@ -69,6 +69,12 @@ const dataFunction = () => {
 //   [ 6, 5, 16, 9, 5 ],
 //   [ 5, 16, 16, 13, 15 ],
 //   [ 18, 8, 9, 18, 19 ] ];
+// SCFLP 迭代2次达到均衡
+H = [ 8, 9, 9, 11 ];
+D = [ [ 8, 7, 9, 9, 8 ],
+  [ 9, 7, 9, 9, 6 ],
+  [ 7, 8, 7, 9, 8 ],
+  [ 6, 8, 9, 5, 8 ] ]
 module.exports = {
   F,
   C,

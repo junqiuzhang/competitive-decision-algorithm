@@ -5,7 +5,9 @@ const { F, C, H, D, U } = require('./data');
 /**
  * 精确解
  */
+
 const getX = (num, F, C) => {
+  let x = rand(F, C, [0, 1]);
   let arrX = [];
   let n = num;
   while (Math.floor(n / F) > 0) {
@@ -20,7 +22,6 @@ const getX = (num, F, C) => {
     arrX = arrX.concat([0]);
   }
   arrX.reverse();
-  let x = rand(F, C, [0, 1]);
   for (let j = 0; j < arrX.length; j++) {
     x[arrX[j]][j] = 1;
   }
@@ -60,15 +61,13 @@ const check = (x) => {
   }
   return true;
 }
-// const costFunction = () => {
-//   return 1000;
-// }
+
 const solve = (start, end, F, C, H, D, U) => {
   let minCost = 999999;
   let minCostX = [];
   let presentX = rand(F, C, [0, 1]);
   for (let i = start; i < end; i++) {
-    presentX = fixX(presentX, i, F, C);//getX(i, F, C);
+    presentX = getX(i, F, C);//fixX(presentX, i, F, C);//
     let is = true;
     // 强容量限制的设施选址问题需要检查解
     if (Mode) {
@@ -79,12 +78,16 @@ const solve = (start, end, F, C, H, D, U) => {
       if (presentCost < minCost) {
         minCost = presentCost;
         minCostX = presentX;
-        // console.log(minCostX, minCost);
+        console.log('精确解', minCostX, minCost);
       }
     }
   }
   return minCost;
 }
+
+const MaxLoopNumber = Math.pow(F, C);
+solve(0, MaxLoopNumber, F, C, H, D, U);
+
 module.exports = {
   getX,
   check,
