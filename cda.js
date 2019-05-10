@@ -28,11 +28,10 @@ const competeSoft = (i, j, x, y, H, D, U) => {
 const costFunction = (x, H, D, U) => {
   let sum, min = 0;
   for (let i = 0; i < x.length; i++) {
-    xi = x[i];
     sum = 0;
-    for (let j = 0; j < xi.length; j++) {
-      sum += xi[j];
-      if (xi[j]) {
+    for (let j = 0; j < x[i].length; j++) {
+      sum += x[i][j];
+      if (x[i][j]) {
         min += D[i][j];
       }
     }
@@ -45,10 +44,8 @@ const expectCostFunction = (x, H, D, U, K) => {
   let sum, min = 0;
   let minX = rand(x.length, x[0].length, [0, 1]);
   for (let i = 0; i < x.length; i++) {
-    xi = x[i];
     sum = 0;
-    for (let j = 0; j < xi.length; j++) {
-      sum += xi[j];
+    for (let j = 0; j < x[i].length; j++) {
       let sumK = 0;
       for (let indexI = 0; indexI < x.length; indexI++) {
         if (sumArr(x[indexI]) > 0 && K[indexI][j] > (sumArr(column(K, j)) / x.length)) {
@@ -56,11 +53,14 @@ const expectCostFunction = (x, H, D, U, K) => {
         }
       }
       if (sumArr(x[i]) > 0 && K[i][j] > (sumArr(column(K, j)) / x.length)) {
-        min += D[i][j] * K[i][j] / sumK;
+        // min += D[i][j] * K[i][j] / sumK;
         // minX[i][j] = K[i][j] / sumK;
+        min += D[i][j] * (+((K[i][j] / sumK).toFixed(4)));
         minX[i][j] = +((K[i][j] / sumK).toFixed(4));
       }
+      sum += minX[i][j];
     }
+    // min = min + H[i] * Math.ceil(sum / U);
     min = min + H[i] * Math.ceil(sum / U);
   }
   return [min, minX];
@@ -75,18 +75,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
    * D服务费用矩阵
   */
 
-  // const F = 4;
-  // const C = 5;
-  // const U = 2;
-  // const H = [10, 29, 22, 16];
-  // const D = [
-  //   [3, 7, 12, 13, 14],
-  //   [17, 13, 14, 16, 17],
-  //   [14, 9, 9, 10, 6],
-  //   [15, 10, 8, 6, 3]
-  // ];
-
-  //console.log('H, D', H, D);
+  console.log('H, D', H, D);
 
   /**
    * cda算法
@@ -97,7 +86,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   let mustY = rand(1, F, [0, 1]);
   let x = rand(F, C, [0, 1]);
   let y = rand(1, F, [0, 1]);
-  // //console.log('x, y', x, y);
+  // console.log('x, y', x, y);
 
   /** 
    * 第一步：根据性质降阶
@@ -118,7 +107,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       mustY[minIndex] = 1;
     }
   }
-  // //console.log('mustX, mustY', mustX, mustY);
+  // console.log('mustX, mustY', mustX, mustY);
 
   // 性质3
   for (let i = 0; i < F; i++) {
@@ -130,7 +119,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       }
     }
   }
-  // //console.log('mustX, mustY', mustX, mustY);
+  // console.log('mustX, mustY', mustX, mustY);
 
   /** 
    * 第二步：计算竞争力函数矩阵
@@ -189,7 +178,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
     }
   }
   Mode ? newCompete() : newCompeteSoft();
-  //console.log('竞争力矩阵', K);
+  console.log('竞争力矩阵', K);
 
   /** 
    * 第三步：分配顾客
@@ -218,7 +207,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   }
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
-  //console.log('分配顾客结果', x);
+  console.log('分配顾客结果', x);
 
   /** 
    * 第四步：争夺顾客
@@ -252,8 +241,8 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
          * 争夺顾客  
         */
 
-        //console.log('对顾客', j);
-        //console.log('竞争力矩阵', K);
+        console.log('对顾客', j);
+        console.log('竞争力矩阵', K);
 
         // 竞争力最大的设施
         let KCol = column(K, j);
@@ -283,7 +272,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              //console.log('重新分配顾客', x);
+              console.log('重新分配顾客', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -302,7 +291,7 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              //console.log('重新分配顾客', x);
+              console.log('重新分配顾客', x);
               break;
             }
           }
@@ -313,14 +302,14 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
         }
       }
       if (j === C) {
-        //console.log('竞争决策均衡');
+        console.log('竞争决策均衡');
         break;
       }
       loopTimes++;
     }
   }
   FacilityCompeteCustom(x, y);
-  //console.log('争夺顾客结果', x);
+  console.log('争夺顾客结果', x);
 
   /** 
    * 第五步：资源交换
@@ -365,14 +354,14 @@ const cda = (F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   */
 
   let cost = costFunction(x, H, D, U);
-  //console.log('纯策略解', x);
-  //console.log('总费用函数', cost);
+  console.log('纯策略解', x);
+  console.log('总费用函数', cost);
 
   // 期望
   Mode ? newCompete() : newCompeteSoft();
   let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K, mustX);
-  //console.log('混合策略解', expectCostX);
-  //console.log('总费用函数', expectCost);
+  console.log('混合策略解', expectCostX);
+  console.log('总费用函数', expectCost);
 
   return expectCost <= cost;
 }

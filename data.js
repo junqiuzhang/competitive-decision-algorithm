@@ -2,10 +2,10 @@ const { rand } = require('./function');
 const F = 5;
 const C = 5;
 const U = 2;
-let H = rand(1, F, [10, 20]);
-let D = rand(F, C, [5, 20]);
 const MaxLoopTimes = 1;
 const MaxExchangeTimes = 0;
+let H = rand(1, F, [10, 20]);
+let D = rand(F, C, [5, 20]);
 const dataFunction = () => {
   let H = rand(1, F, [10, 20]);
   let D = rand(F, C, [5, 20]);
@@ -19,6 +19,14 @@ const dataFunction = () => {
     MaxExchangeTimes,
   };
 }
+// 最初的算例
+// H = [10, 29, 22, 16];
+// D = [
+//   [3, 7, 12, 13, 14],
+//   [17, 13, 14, 16, 17],
+//   [14, 9, 9, 10, 6],
+//   [15, 10, 8, 6, 3]
+// ];
 // HCFLP 迭代3次达到均衡
 // H = [ 18, 11, 11, 12, 14 ];
 // D = [ [ 13, 7, 15, 16, 17 ],
@@ -54,6 +62,13 @@ const dataFunction = () => {
 //   [ 11, 7, 16, 5, 17 ],
 //   [ 15, 7, 5, 12, 13 ],
 //   [ 12, 7, 8, 13, 15 ] ];
+// SCFLP 迭代4次达到均衡
+H = [ 19, 18, 10, 13, 16 ];
+D = [ [ 10, 17, 12, 19, 10 ],
+  [ 9, 11, 17, 5, 17 ],
+  [ 6, 5, 16, 9, 5 ],
+  [ 5, 16, 16, 13, 15 ],
+  [ 18, 8, 9, 18, 19 ] ];
 module.exports = {
   F,
   C,
