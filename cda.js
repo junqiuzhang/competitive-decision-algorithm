@@ -68,7 +68,6 @@ const cda = (F, C, H, D, U) => {
    * D服务费用矩阵
   */
 
-
   // const F = 4;
   // const C = 5;
   // const U = 2;
@@ -94,6 +93,7 @@ const cda = (F, C, H, D, U) => {
   /** 
    * 第一步：根据性质降阶
   */
+
   // 性质2
   let minIndex = H.indexOf(Math.min(...H));
   for (let j = 0; j < C; j++) {
@@ -126,6 +126,7 @@ const cda = (F, C, H, D, U) => {
   /** 
    * 第二步：计算竞争力函数矩阵
   */
+
   x = copyMatrix(mustX);
   y = copyMatrix(mustY);
   let K = rand(F, C, [0, 1]);
@@ -180,9 +181,11 @@ const cda = (F, C, H, D, U) => {
   }
   Mode ? newCompete() : newCompeteSoft();
   // console.log('K', K);
+
   /** 
    * 第三步：分配顾客
   */
+
   const FacilityDistributeCustom = () => {
     for (let j = 0; j < C; j++) {
       const ConstKCol = column(K, j);
@@ -207,9 +210,11 @@ const cda = (F, C, H, D, U) => {
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
   console.log('分配顾客结果', x);
+
   /** 
    * 第四步：争夺顾客
   */
+
   const FacilityCompeteCustom = (x, y) => {
     const MaxLoopTimes = 3;
     let loopTimes = 0;
@@ -300,10 +305,10 @@ const cda = (F, C, H, D, U) => {
   }
   FacilityCompeteCustom(x, y);
   console.log('争夺顾客结果', x);
+
   /** 
    * 第五步：资源交换
   */
-
 
   Mode ? newCompete() : newCompeteSoft();
 
@@ -339,9 +344,11 @@ const cda = (F, C, H, D, U) => {
     }
   }
   FacilityExchangeCustom();
+
   /** 
    * 第六步：输出结果
   */
+ 
   let cost = costFunction(x, H, D, U);
   // console.log('x', x);
   console.log('cost', cost);
