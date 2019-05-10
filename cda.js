@@ -1,9 +1,11 @@
 const { rand, copyMatrix, bigger, smaller, column, sumArr } = require('./function');
 const { F, C, H, D, U } = require('./data');
+
 /**
  * Mode: true--强容量限制， false--软容量限制
  */
 const Mode = false;
+
 // 竞争力函数
 const compete = (i, j, x, y, H, D) => {
   if (sumArr(x[i]) > 0) {
@@ -79,10 +81,12 @@ const cda = (F, C, H, D, U) => {
   //   [15, 10, 8, 6, 3]
   // ];
 
-  console.log('H, D', H, D)
+  console.log('H, D', H, D);
+
   /**
    * cda算法
   */
+
   // 初始化
   let mustX = rand(F, C, [0, 1]);
   let mustY = rand(1, F, [0, 1]);
@@ -267,7 +271,7 @@ const cda = (F, C, H, D, U) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('compete', x);
+              console.log('争夺顾客', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -348,7 +352,7 @@ const cda = (F, C, H, D, U) => {
   /** 
    * 第六步：输出结果
   */
- 
+
   let cost = costFunction(x, H, D, U);
   // console.log('x', x);
   console.log('cost', cost);

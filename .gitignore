@@ -3,6 +3,7 @@
 *.pdf
 /node_modules/
 temp*.js
+*.txt
 # some local files
 */.settings/
 */.DS_Store
