@@ -86,8 +86,8 @@ const solve = (start, end, Mode, F, C, H, D, U, costFunction) => {
   return minCost;
 }
 
-// const MaxLoopNumber = Math.pow(F, C);
-// solve(0, MaxLoopNumber, Mode, F, C, H, D, U);
+const MaxLoopNumber = Math.pow(F, C);
+solve(0, MaxLoopNumber, Mode, F, C, H, D, U, costFunction);
 
 module.exports = {
   getX,

@@ -309,7 +309,6 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
     }
   }
   FacilityCompeteCustom(x, y);
-  console.log(x);
 
   /** 
    * 第五步：资源交换
@@ -367,7 +366,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   return expectCost <= cost;
 }
 
-// cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
+cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);
 
 module.exports = {
   compete,
