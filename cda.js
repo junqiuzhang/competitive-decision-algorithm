@@ -241,7 +241,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
          * 争夺顾客  
         */
 
-        console.log('当前顾客', j + 1);
+        console.log('当前顾客', j);
         console.log('当前竞争力函数矩阵', K);
 
         // 竞争力最大的设施
@@ -326,6 +326,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       let first = rand(1, 1, [0, C]);
       let second = rand(1, 1, [0, C]);
       if (first !== second) {
+        console.log('交换顾客', first, second);
         let firstCol = columnMatrix(newX, first);
         let secondCol = columnMatrix(newX, first);
         let firstIndex = firstCol.indexOf(1);
