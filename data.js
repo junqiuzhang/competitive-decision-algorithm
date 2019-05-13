@@ -3,11 +3,11 @@ const { rand } = require('./function');
  * Mode: true--强容量限制， false--软容量限制
  */
 const Mode = false;
-const F = 4;
-const C = 5;
+const F = 8;
+const C = 9;
 const U = 2;
-const MaxLoopTimes = 10;
-const MaxExchangeTimes = 3;
+const MaxLoopTimes = 3;
+const MaxExchangeTimes = 0;
 let H = rand(1, F, [5, 15]);
 let D = rand(F, C, [5, 10]);
 const dataFunction = () => {

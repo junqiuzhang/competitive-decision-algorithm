@@ -79,7 +79,7 @@ const solve = (start, end, Mode, F, C, H, D, U, costFunction) => {
       if (newCost < cost) {
         cost = newCost;
         x = newX;
-        console.log('精确解', x, cost);
+        //console.log('精确解', x, cost);
       }
     }
   }

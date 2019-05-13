@@ -70,9 +70,9 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
    * D服务费用矩阵
   */
 
-  console.log('H', H);
-  console.log('D', D);
-  console.log('U', U);
+  //console.log('H', H);
+  //console.log('D', D);
+  //console.log('U', U);
 
   /**
    * cda算法
@@ -89,7 +89,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   /** 
    * 第一步：根据性质降阶
   */
-  console.log('第一步：根据性质降阶');
+  //console.log('第一步：根据性质降阶');
 
   // 性质2
   let minIndex = H.indexOf(Math.min(...H));
@@ -121,7 +121,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   /** 
    * 第二步：计算竞争力函数矩阵
   */
-  console.log('第二步：计算竞争力函数矩阵');
+  //console.log('第二步：计算竞争力函数矩阵');
 
   x = copyMatrix(mustX);
   y = copyMatrix(mustY);
@@ -176,12 +176,12 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
     }
   }
   Mode ? newCompete() : newCompeteSoft();
-  console.log(K);
+  //console.log(K);
 
   /** 
    * 第三步：分配顾客
   */
-  console.log('第三步：分配顾客');
+  //console.log('第三步：分配顾客');
 
   const FacilityDistributeCustom = () => {
     for (let j = 0; j < C; j++) {
@@ -206,12 +206,12 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   }
   FacilityDistributeCustom();
   Mode ? newCompete() : newCompeteSoft();
-  console.log(x);
+  //console.log(x);
 
   /** 
    * 第四步：争夺顾客
   */
-  console.log('第四步：争夺顾客');
+  //console.log('第四步：争夺顾客');
 
   const FacilityCompeteCustom = (x, y) => {
     let loopTimes = 0;
@@ -241,8 +241,8 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
          * 争夺顾客  
         */
 
-        console.log('当前顾客', j);
-        console.log('当前竞争力函数矩阵', K);
+        //console.log('当前顾客', j);
+        //console.log('当前竞争力函数矩阵', K);
 
         // 竞争力最大的设施
         let KCol = columnMatrix(K, j);
@@ -272,7 +272,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('重新分配', x);
+              //console.log('重新分配', x);
               break;
             } else {
               x[maxIndex][KRowMinIndex] = 1;
@@ -291,7 +291,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
             let newCost = costFunction(x, H, D, U);
             if (newCost < cost) {
               cost = newCost;
-              console.log('重新分配', x);
+              //console.log('重新分配', x);
               break;
             }
           }
@@ -302,7 +302,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
         }
       }
       if (j === C) {
-        console.log('竞争决策均衡');
+        //console.log('竞争决策均衡');
         break;
       }
       loopTimes++;
@@ -313,7 +313,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   /** 
    * 第五步：资源交换
   */
-  console.log('第五步：资源交换');
+  //console.log('第五步：资源交换');
 
   Mode ? newCompete() : newCompeteSoft();
 
@@ -326,7 +326,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
       let first = rand(1, 1, [0, C]);
       let second = rand(1, 1, [0, C]);
       if (first !== second) {
-        console.log('交换顾客', first, second);
+        //console.log('交换顾客', first, second);
         let firstCol = columnMatrix(newX, first);
         let secondCol = columnMatrix(newX, first);
         let firstIndex = firstCol.indexOf(1);
@@ -355,14 +355,14 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   */
 
   let cost = costFunction(x, H, D, U);
-  console.log('纯策略解', x);
-  console.log('总费用函数', cost);
+  //console.log('纯策略解', x);
+  //console.log('总费用函数', cost);
 
   // 期望
   Mode ? newCompete() : newCompeteSoft();
   let [expectCost, expectCostX] = expectCostFunction(x, H, D, U, K, mustX);
-  console.log('混合策略解', expectCostX);
-  console.log('总费用函数', expectCost);
+  //console.log('混合策略解', expectCostX);
+  //console.log('总费用函数', expectCost);
 
   return [cost, expectCost];
 }
