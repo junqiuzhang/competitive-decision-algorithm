@@ -364,7 +364,7 @@ const cda = (Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes) => {
   console.log('混合策略解', expectCostX);
   console.log('总费用函数', expectCost);
 
-  return expectCost <= cost;
+  return [cost, expectCost];
 }
 
 cda(Mode, F, C, H, D, U, MaxLoopTimes, MaxExchangeTimes);

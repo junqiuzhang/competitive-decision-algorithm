@@ -64,26 +64,26 @@ const check = (x, U) => {
 }
 
 const solve = (start, end, Mode, F, C, H, D, U, costFunction) => {
-  let minCost = 999999;
-  let minCostX = [];
-  let presentX = rand(F, C, [0, 1]);
+  let cost = 999999;
+  let x = [];
+  let newX = rand(F, C, [0, 1]);
   for (let i = start; i < end; i++) {
-    presentX = getX(i, F, C);//fixX(presentX, i, F, C);//
+    newX = getX(i, F, C);//fixX(newX, i, F, C);//
     let is = true;
     // 强容量限制的设施选址问题需要检查解
     if (Mode) {
-      is = check(presentX, U);
+      is = check(newX, U);
     }
     if (is) {
-      let presentCost = costFunction(presentX, H, D, U);
-      if (presentCost < minCost) {
-        minCost = presentCost;
-        minCostX = presentX;
-        console.log('精确解', minCostX, minCost);
+      let newCost = costFunction(newX, H, D, U);
+      if (newCost < cost) {
+        cost = newCost;
+        x = newX;
+        console.log('精确解', x, cost);
       }
     }
   }
-  return minCost;
+  return cost;
 }
 
 const MaxLoopNumber = Math.pow(F, C);
