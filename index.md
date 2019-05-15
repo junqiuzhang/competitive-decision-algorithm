@@ -89,7 +89,7 @@ $$x_{i},\ y_{j} \in \{ 0,\ 1\},\forall i,\forall j$$
 
 $p -$中心选址问题研究选取$p$个设施的位置来服务若干个顾客，使得最差的情况达到最优的问题。$p -$中心问题的目标可以是最大距离最小，可以是最大反应时间最小，也可以是最大损失最小。
 
-$p -$中心问题最早也是由Hakimi提出的$^{\lbrack 3\rbrack}$，可以分为绝对$p -$中心问题和顶点$p -$中心问题，其区别与$p -$中值问题的分类中的两种问题的区别类似，所以一般也不区分这两种问题。在之后的研究中，Kariv和Hakimi证明了$p -$中心问题是NP-hard问题；Hedetnie研究了无权网络中的1-中心问题，Migiddo和Supowit证明了$p -$中心问题是NP-完全的。
+$p -$中心问题最早也是由Hakimi提出的$^{\lbrack 3\rbrack}$，可以分为绝对$p -$中心问题和顶点$p -$中心问题，其区别与$p -$中值问题的分类中的两种问题的区别类似，所以一般也不区分这两种问题。在之后的研究中，Kariv和Hakimi证明了$p -$中心问题是NP-hard问题$^{\lbrack 4\rbrack}$；Hedetnie研究了无权网络中的1-中心问题，Migiddo和Supowit证明了$p -$中心问题是NP-完全的。
 
 记顾客集合为$C$，候选设施集合$F$，任意顾客和候选设施之间都有一定的服务费用$d_{ij} \in R^{+}$，我们的目标就是在候选设施集合$F$中选取一个子集，使得最差情况的服务费用达到最小，则$p -$中心选址模型可以描述为：
 
@@ -133,11 +133,11 @@ $$x_{ij},y_{j} \in \{ 0,\ 1\},\forall i,\forall j$$
 
 其中，$i$为顾客的序号，$j$为候选设施的序号，$x_{ij}$为候选设施$j$是否为顾客$i$服务，若候选设施$j$为顾客$i$服务，则$x_{ij}$为1，否则为0，$y_{j}$为候选设施$j$是否建设，若候选设施$j$建设，则$y_{j}$为1，否则为0。约束（1）式表示只有建立的设施才能为顾客提供服务，约束（2）式表示候选设施服务的顾客数不能超过它的容量上限，约束（3）式表示，约束（4）式是变量的取值范围约束。
 
-另一类是带容量限制的选址问题（Capacitated Facility Location Problem, CFLP），这一类问题又可以分为弱容量限制的选址问题（Soft-Capacitated Facility Location Problem, SCFLP）和强容量限制的选址问题（Hard-Capacitated Facility Location Problem, HCFLP）。弱容量限制的选址问题对设施的连接数加以限制，每个设施最多连接$u_{i}$个顾客，但是每个地点允许建设多个设施；而强容量限制的是选址问题，除了限制每个设施最多连接$u_{i}$个顾客，还限制每个地点仅能建设一个设施。
+另一类是带容量限制的选址问题（Capacitated Facility Location Problem, CFLP），本文主要研究的就是这一类问题。这一类问题又可以分为弱容量限制的选址问题（Soft-Capacitated Facility Location Problem, SCFLP）和强容量限制的选址问题（Hard-Capacitated Facility Location Problem, HCFLP）。弱容量限制的选址问题对设施的连接数加以限制，每个设施最多连接$u_{i}$个顾客，但是每个地点允许建设多个设施；而强容量限制的是选址问题，除了限制每个设施最多连接$u_{i}$个顾客，还限制每个地点仅能建设一个设施。
 
 ### 2.5.2 竞争决策算法简介
 
-宁爱兵等人在文章中提出了一种新型的启发式算法----竞争决策算法，这种算法可以用来求解组合优化的问题，并且取得了不错的解。选址问题也是一种组合优化问题，本文便采用竞争决策算法来对选址问题进行求解。
+宁爱兵等人在文章中提出了一种新型的启发式算法----竞争决策算法$^{\lbrack 8\rbrack}$，这种算法可以用来求解组合优化的问题$^{\lbrack 10-16\rbrack}$，并且取得了不错的解。选址问题也是一种组合优化问题，何永梅等人采用竞争决策算法对软容量限制的选址问题进行了求解$^{\lbrack 9\rbrack}$，证实了竞争决策算法可以用来求解选址问题。
 
 竞争决策算法（Competitive Decision Algorithm, CDA）是在某种规则下，模拟竞争者和资源的竞争来求解问题的算法。
 
@@ -145,7 +145,7 @@ $$x_{ij},y_{j} \in \{ 0,\ 1\},\forall i,\forall j$$
 
 竞争决策算法就是利用这一原理，通过模拟多个竞争者对资源进行竞争，根据一定的竞争原则对资源重新进行分配，最终使得一些更具优势的竞争者分配到更多的资源，而处于劣势的竞争者失去资源，最终达到总体目标最优或近似最优。
 
-### 2.3.3 竞争决策算法基本概念
+### 2.3.3 竞争决策算法基本概念$^{\lbrack 8\rbrack}$
 
 竞争者：参与竞争的对象，可以占有和争夺资源。
 
@@ -188,6 +188,8 @@ $$y_{j} \in N^{*},\forall j$$
 其中，$i$为顾客的序号，$j$为候选设施的序号，$x_{ij}$为候选设施$j$是否为顾客$i$服务，若候选设施$j$为顾客$i$服务，则$x_{ij}$为1，否则为0，$y_{j}$为候选设施$j$是否建设，若候选设施$j$建设，则$y_{j}$为1，否则为0。约束（1）式表示只有建立的设施才能为顾客提供服务，约束（2）式表示候选设施服务的顾客数不能超过它的容量上限，约束（3）式表示，约束（4）（5）式是变量的取值范围约束。
 
 ## 3.2 数学性质
+
+何永梅等人在文章中总结了软容量限制的设施选址问题的数学性质，本文对何永梅等人总结的数学性质重新进行了整理和归纳，得到如下四条性质：
 
 **性质1** 如果设施$F_{i_{1}}$和设施$F_{i_{2}}$满足下列条件：
 
@@ -237,7 +239,7 @@ $$y_{j} \in N^{*},\forall j$$
 
 ## 3.3 竞争决策算法
 
-本文采用竞争决策算法对软容量限制的选址问题进行求解。
+何永梅等人利用竞争决策算法对软容量限制的设施选址问题进行了求解，本文同样利用竞争决策算法对软容量限制的选址问题进行求解，并且在何永梅等人研究的基础上对算法流程进行了进一步简化和整理。
 
 ### 3.3.1 竞争决策算法概念
 
@@ -527,7 +529,7 @@ $$x_{ij},y_{j} \in \{ 0,\ 1\},\forall i,\forall j$$
 
 ## 4.3 竞争决策算法
 
-该模型同样使用竞争决策算法进行求解，算法流程与软容量限制的竞争决策算法相同，而其中有一些细节略有不同，具体不同之处如下：
+该模型同样可以使用竞争决策算法进行求解，本文在软容量限制的设施选址问题的竞争决策算法的基础上进行了改进，给出了强容量限制的设施选址问题下的竞争决策算法流程。
 
 ### 4.3.1 竞争决策算法概念
 
@@ -758,16 +760,34 @@ $$
 
 # 参考文献
 
-\[1\]:杨丰梅, 华国伟, 邓猛, 黎建强. 选址问题研究的若干进展. 运筹与管理, 2005, 14(6):1-7.
+[1]:杨丰梅, 华国伟, 邓猛, 黎建强. 选址问题研究的若干进展. 运筹与管理, 2005, 14(6):1-7.
 
-\[2\]:Weber A. On the location of industries\[M\]. Chicago: University of Chicago Press, 1929.
+[2]:Weber A. On the location of industries[M]. Chicago: University of Chicago Press, 1929.
 
-\[3\]:Hakimi S L. Optimum locations of switching centers and medians of a graph\[J\]. Operations Research, 1964, 12:450-459.
+[3]:Hakimi S L. Optimum locations of switching centers and medians of a graph[J]. Operations Research, 1964, 12:450-459.
 
-\[4\]:Kariv O, Hakimi S L. An algorithmic approach to network location problem, part 2: the p-medians\[J\]. SIAM Journal Applied Mathematics, 1979, 37:539-560.
+[4]:Kariv O, Hakimi S L. An algorithmic approach to network location problem, part 2: the p-medians[J]. SIAM Journal Applied Mathematics, 1979, 37:539-560.
 
-\[5\]:Toregas C, Swian R, ReVelle C, et al. The location of emergency service facilities\[J\]. Operations Research, 1971, 19:1363-1373.
+[5]:Toregas C, Swian R, ReVelle C, et al. The location of emergency service facilities[J]. Operations Research, 1971, 19:1363-1373.
 
-\[6\]:Church R L, ReVelle C. Maximal covering location problem\[J\]. Papers of the Regional Science Association, 1974, 32:101-118.
+[6]:Church R L, ReVelle C. Maximal covering location problem\[J\]. Papers of the Regional Science Association, 1974, 32:101-118.
 
-\[7\]:安凤仙. k-层无容量限制的设施选址问题的一种算法\[J\]. 淮阴工学院学报, 2009, 18(5):1-4.
+[7]:安凤仙. k-层无容量限制的设施选址问题的一种算法[J]. 淮阴工学院学报, 2009, 18(5):1-4.
+
+[8]:宁爱兵, 王波, 熊小华, 马良. 竞争决策算法原理及其应用[J]. 上海理工大学学报, 2008, 30(4):369-373.
+
+[9]:何永梅, 宁爱兵, 彭大江, 尚春剑, 张惠珍. 软容量限制设施选址问题的竞争决策算法\[J\]. 计算机工程与应用, 2019(3).
+
+[10]:宁爱兵, 马良. 竞争决策算法及其在车辆路径问题中的应用[J]. 管理科学学报,2005,8(6):10-18. 
+
+[11]:宁爱兵, 马良. 度约束最小生成树(DCMST)的竞争决策算法[J]. 系统工程学报, 2005, 20(6):630-634. 
+
+[12]:刘勇, 马良, 宁爱兵. 给定限期条件下应急选址问题的量子竞争决策算法[J]. 运筹与管理, 2011, 20(3):66-71. 
+
+[13]:宁爱兵, 熊校华, 马良. 多目标旅行商问题的竞争决策算法[J]. 计算机工程与应用, 2009, 45(34):13-16.
+
+[14]:熊小华, 宁爱兵, 马良. 多目标 0-1 背包问题的元胞竞争决策算法[J]. 计算机应用研究, 2010, 27(10):3680-3682. 
+
+[15]:熊小华, 宁爱兵. 最小比率生成树的竞争决策算法[J]. 计算机工程与应用,2012,48(28),47-51. 
+
+[16]:金婷婷, 王波, 宁爱兵. 最小顶点覆盖问题的竞争决策算法[J]. 计算机工程与应用, 2011, 47(1):32-34.
