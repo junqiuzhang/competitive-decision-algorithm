@@ -1,5 +1,5 @@
-*.doc
-*.docx
+# *.doc
+# *.docx
 *.pdf
 /node_modules/
 tempCodeRunnerFile.js
