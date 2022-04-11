@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhangJJQQ/hello-world.git"
+    "url": "git+https://github.com/junqiuzhang/competitive-decision-algorithm.git"
   },
-  "author": "张君秋",
+  "author": "junqiuzhang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zhangJJQQ/hello-world/issues"
+    "url": "https://github.com/junqiuzhang/competitive-decision-algorithm/issues"
   },
-  "homepage": "https://github.com/zhangJJQQ/hello-world#readme",
+  "homepage": "https://github.com/junqiuzhang/competitive-decision-algorithm#readme",
   "dependencies": {
     "express": "^4.16.4"
   }
